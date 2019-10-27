@@ -1,5 +1,11 @@
 #!/usr/bin/env python
-import os
+import pypyodbc
 
-import sys
-print(sys.path)
+#try:
+connection = pypyodbc.connect('Driver={ODBC Driver 17 for SQL Server};'
+                              'Server=local;'
+                              'Database=TestDB;'
+                              'uid=SA;'
+                              'pwd=1qaz@WSX;')
+#except:
+

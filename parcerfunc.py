@@ -14,6 +14,10 @@ temp = open(tempfile, mode = 'w+', encoding ='utf-8')
 temp.truncate(0)
 
 
+def car_list(x,y):
+    for car in x:
+        y.append(car)
+
 
 def remove_weak():
     outputf = "temp1.txt"
@@ -36,7 +40,6 @@ def remove_weak():
             if '430' in line: continue
             out_f.write(line)
     out_f.close()
-
 
 
 def exit_procedures():

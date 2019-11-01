@@ -17,7 +17,7 @@ import os
 
 def OSIS(): # define path to Desktop folder
     if platform.system() == "Windows":
-        print("C:\\" + getpass.getuser() + "\Desktop\\")
+        print("C:\\Users\\" + getpass.getuser() + "\Desktop\\")
     elif platform.system() == "Linux":
         print("\home\\" + getpass.getuser() + "\Desktop")
     else:

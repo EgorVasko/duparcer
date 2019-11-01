@@ -13,11 +13,11 @@ cursor = connection.cursor()
 
 import getpass
 import platform
-
+import os
 
 def OSIS(): # define path to Desktop folder
     if platform.system() == "Windows":
-        print("windows")
+        print("C:\\" + getpass.getuser() + "\Desktop\\")
     elif platform.system() == "Linux":
         print("\home\\" + getpass.getuser() + "\Desktop")
     else:

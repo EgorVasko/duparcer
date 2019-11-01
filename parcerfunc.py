@@ -2,12 +2,25 @@
 import time
 import datetime
 import os
+import getpass
+import platform
+
 
 tempfile = "temp.txt"
 temp1file = "temp1.txt"
 t1 = time.time()
 today = datetime.datetime.today()
 time_of_parse = today.strftime("%Y-%m-%d %H:%M:%S")
+
+
+def OSIS(): # define path to Desktop folder
+    if platform.system() == "Windows":
+        return("C:\\Users\\" + getpass.getuser() + "\Desktop\\")
+    elif platform.system() == "Linux":
+        return("/home/" + getpass.getuser() + "/Desktop/")
+    else:
+        return('')
+path = OSIS()
 
 def car_list(x,y):
     for car in x:
@@ -38,19 +51,19 @@ def remove_weak():
 
 
 def rename():
-    if os.path.exists("../../Desktop/output.txt"):
-        old_file = os.path.join("../../Desktop/", "output.txt")
+    if os.path.exists(path + "output.txt"):
+        old_file = os.path.join(path, "output.txt")
     else:
-        x = open("../../Desktop/output.txt", "w", encoding=('utf-8'))
+        x = open(path + "output.txt", "w", encoding=('utf-8'))
         x.close()
-        old_file = os.path.join("../../Desktop/", "output.txt")
+        old_file = os.path.join(path, "output.txt")
     new_file = os.path.join("", "output.old")
     os.rename(old_file, new_file)
 
 
 def copy_new():
 
-    with open('temp1.txt','r') as in_file, open('../../Desktop/output.txt', 'w+') as out_file, open('output.old','r') as check_file:
+    with open('temp1.txt','r') as in_file, open(path + 'output.txt', 'w+') as out_file, open('output.old','r') as check_file:
         seen = set()
         out_file.write('================================== new cars ' + time_of_parse + ' ==================================\n')
         for line in check_file:
@@ -63,7 +76,7 @@ def copy_new():
 
 
 def copy_old():
-    with open('output.old','r') as in_file, open('../../Desktop/output.txt', 'r+') as out_file:
+    with open('output.old','r') as in_file, open(path + 'output.txt', 'r+') as out_file:
         seen = set()
         out_file.write('============================================ old cars ============================================\n')
         for line in out_file:

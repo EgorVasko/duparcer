@@ -11,17 +11,6 @@ import pypyodbcconnection = pypyodbc.connect('Driver={SQL Server};'
 cursor = connection.cursor()
 '''
 
-import getpass
-import platform
-import os
 
-def OSIS(): # define path to Desktop folder
-    if platform.system() == "Windows":
-        print("C:\\Users\\" + getpass.getuser() + "\Desktop\\")
-    elif platform.system() == "Linux":
-        print("\home\\" + getpass.getuser() + "\Desktop")
-    else:
-        print('xz')
-
-OSIS()
+print(path)
 

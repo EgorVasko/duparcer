@@ -29,7 +29,7 @@ cars = [infi, x3, bmw3, bmw1, a4, a5, is1, is2, is3, z350, bmw5]
 carslinks = []
 cardict = {}
 looking_for_link = 'a href="https://dubai.dubizzle.com/motors/used-cars/'
-
+path = OSIS()
 
 #----------------------------------------------Functions ---------------------------------------------
 

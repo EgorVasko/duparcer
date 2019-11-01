@@ -15,9 +15,9 @@ time_of_parse = today.strftime("%Y-%m-%d %H:%M:%S")
 
 def OSIS(): # define path to Desktop folder
     if platform.system() == "Windows":
-        return("C:\\Users\\" + getpass.getuser() + "\Desktop\\")
+        return("C:\\Users\\" + getpass.getuser() + "\Desktop\\") # try os.path.expanduser('~')
     elif platform.system() == "Linux":
-        return("/home/" + getpass.getuser() + "/Desktop/")
+        return(os.path.expanduser('~') + "/Desktop/")
     else:
         return('')
 path = OSIS()

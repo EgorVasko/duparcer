@@ -11,7 +11,6 @@ from urllib import request
 from parcerfunc import *
 import os
 
-
 # ------------------------------------ Variables --------------------------------------
 
 infi = 'https://dubai.dubizzle.com/motors/used-cars/infiniti/gseries/?price__gte=&price__lte=25000&year__gte=2009&year__lte=&kilometers__gte=&kilometers__lte=230000'
@@ -26,14 +25,14 @@ is3 = 'https://dubai.dubizzle.com/motors/used-cars/lexus/is-series/?price__gte=&
 z350 = 'https://dubai.dubizzle.com/motors/used-cars/nissan/350z/?price__gte=&price__lte=29000&year__gte=2006&year__lte=&kilometers__gte=&kilometers__lte=230000'
 bmw5 = 'https://dubai.dubizzle.com/motors/used-cars/bmw/5-series/?price__gte=&price__lte=25000&year__gte=2004&year__lte=&kilometers__gte=&kilometers__lte=230000'
 cars = [infi, x3, bmw3, bmw1, a4, a5, is1, is2, is3, z350, bmw5]
+#cars = [x3]#test cars for faster parcing
 carslinks = []
 cardict = {}
 looking_for_link = 'a href="https://dubai.dubizzle.com/motors/used-cars/'
-path = OSIS()
 
 #----------------------------------------------Functions ---------------------------------------------
 
-#parce old
+
 def parse():
     temp = open(tempfile, mode = 'w+', encoding ='utf-8')
     temp.truncate(0)
@@ -62,6 +61,10 @@ def parse():
 car_list(cars,carslinks)
 print('Program is running, please wait ~30 seconds')
 parse()              # get all links
+
+for i in cardict:
+    print(i, cardict[i])
+
 remove_weak()        # remove 116, 118, 320, etc..
 rename()             # rename source
 copy_new()           # write from temp1

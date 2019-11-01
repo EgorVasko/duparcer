@@ -1,9 +1,20 @@
 #!/usr/bin/env python
-import os
+import pypyodbc
+'''
+connection = pypyodbc.connect('Driver={SQL Server};'
+                              'Server=DESKTOP-GGL05MB\SQLEXPRESS;'
+                              'Database=master;'
+                              'uid=Maria;'
+                              'pwd=;')
 
-try:
-    old_file = os.path.join("../../Desktop/", "output.txt")
-except FileNotFoundError:
-    old_file = open("../../Desktop/output.txt", mode='w+', encoding='utf-8')
-    new_file = os.path.join("", "output.old")
-    os.rename(old_file, new_file)
+cursor = connection.cursor()
+'''
+
+import platform
+
+if platform.system() == "Windows":
+    print("Your system is Windows")
+elif platform.system() == "Linux":
+    print("Your system is Linux")
+else:
+    print('xz')

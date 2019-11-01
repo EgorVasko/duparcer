@@ -9,7 +9,8 @@
 
 from urllib import request
 from parcerfunc import *
-import json
+import os
+
 
 # ------------------------------------ Variables --------------------------------------
 
@@ -29,10 +30,13 @@ carslinks = []
 cardict = {}
 looking_for_link = 'a href="https://dubai.dubizzle.com/motors/used-cars/'
 
+
 #----------------------------------------------Functions ---------------------------------------------
 
 #parce old
 def parse():
+    temp = open(tempfile, mode = 'w+', encoding ='utf-8')
+    temp.truncate(0)
     for i in range(0,len(carslinks)):
         otvet = request.urlopen(carslinks[i])
         mytext1 = otvet.readlines()
@@ -51,76 +55,16 @@ def parse():
                 if line_link.encode('utf-8') not in cardict.keys():
                     cardict[line_link] = line_price
     temp.close()
-'''
-def parse():
-    for i in range(0,len(carslinks)):
-        otvet = request.urlopen(carslinks[i])
-        mytext1 = otvet.readlines()
-        for num, line in enumerate(mytext1, 1):
-            if looking_for_link in line.decode('utf-8') and ('vin-report') not in line.decode('utf-8'):
-                line_link = str(line)
-                line_link = (line_link[line_link.find('"') + 1 : ])
-                line_link = (line_link[0: + line_link.find('?back')])
-                z = 0
-                for line in mytext1[num:]:
-                    if "AED" in line and z == 0:
-                        line_price = str(line)
-                        line_price = (line_price[line_price.find('AED') : line_price.find('AED') + 10])
-                        z = 1
-                        print(line_price)
-                if line_link.encode('utf-8') not in cardict.keys():
-                    cardict[line_link] = line_price
-'''
-
-def rename():
-        if os.path.exists("../../Desktop/output.txt"):
-            old_file = os.path.join("../../Desktop/", "output.txt")
-        else:
-            x = open("../../Desktop/output.txt", "w", encoding=('utf-8'))
-            x.close()
-            old_file = os.path.join("../../Desktop/", "output.txt")
-        new_file = os.path.join("", "output.old")
-        os.rename(old_file, new_file)
-
-
-def copy_new():
-
-    with open('temp1.txt','r') as in_file, open('../../Desktop/output.txt', 'w+') as out_file, open('output.old','r') as check_file:
-        seen = set()
-        out_file.write('================================== new cars ' + time_of_parse + ' ==================================\n')
-        for line in check_file:
-            seen.add(line)
-        for line in in_file:
-            if line in seen: continue # skip duplicate
-            if '====' in line: continue
-            seen.add(line)
-            out_file.write(line)
-
-
-def copy_old():
-    with open('output.old','r') as in_file, open('../../Desktop/output.txt', 'r+') as out_file:
-        seen = set()
-        out_file.write('============================================ old cars ============================================\n')
-        for line in out_file:
-            seen.add(line)
-        for line in in_file:
-            if line in seen: continue # skip duplicate
-            if '====' in line: continue
-            seen.add(line)
-            out_file.write(line)
 
 
 # ---------------------------------------------main--------------------------------------------------
 
 car_list(cars,carslinks)
 print('Program is running, please wait ~30 seconds')
-parse() # get all links
-remove_weak() # remove 116, 118, 320, etc..
-rename() #rename source
-copy_new() # write from temp1
-copy_old() # write from source
-exit_procedures() # closing files
-exit_text() # Print completion, timing
-
-for i in cardict:
-    print(i, cardict[i])
+parse()              # get all links
+remove_weak()        # remove 116, 118, 320, etc..
+rename()             # rename source
+copy_new()           # write from temp1
+copy_old()           # write from source
+exit_procedures()    # closing files
+exit_text()          # Print completion, timing

@@ -1,7 +1,8 @@
 #!/usr/bin/env python
-import pypyodbc
+
 '''
-connection = pypyodbc.connect('Driver={SQL Server};'
+
+import pypyodbcconnection = pypyodbc.connect('Driver={SQL Server};'
                               'Server=DESKTOP-GGL05MB\SQLEXPRESS;'
                               'Database=master;'
                               'uid=Maria;'
@@ -10,11 +11,17 @@ connection = pypyodbc.connect('Driver={SQL Server};'
 cursor = connection.cursor()
 '''
 
+import getpass
 import platform
 
-if platform.system() == "Windows":
-    print("Your system is Windows")
-elif platform.system() == "Linux":
-    print("Your system is Linux")
-else:
-    print('xz')
+
+def OSIS(): # define path to Desktop folder
+    if platform.system() == "Windows":
+        print("windows")
+    elif platform.system() == "Linux":
+        print("\home\\" + getpass.getuser() + "\Desktop")
+    else:
+        print('xz')
+
+OSIS()
+

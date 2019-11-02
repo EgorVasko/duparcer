@@ -22,6 +22,8 @@ def OSIS(): # define path to Desktop folder
         return(os.path.expanduser('~') + "/Desktop/")
     else:
         return('')
+
+
 path = OSIS()
 
 

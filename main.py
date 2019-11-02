@@ -122,33 +122,49 @@ def dump_data():
 
 def load_to_html():
     with open(path + 'output.html', 'w+') as out_file:
-        line = "================================== New cars " + time_of_parse + " ==================================\n<br />"
-        out_file.write(line)
-        for i in dict_new:
-            line = 'Link is : <a href="' + str(i) + '">' + i + '</a>' + "<pre>    Price is: " + str(dict_new[i]) + "</pre><br />"
+        if not dict_new:
+            line = "<center><h2> No new cars " + time_of_parse + "</center></h2>"
             out_file.write(line)
+        if dict_new:
+            line = "<center><h2> New cars " + time_of_parse + "</center></h2>"
+            out_file.write(line)
+            for i in dict_new:
+                line = 'Link is : <a href="' + str(i) + '">' + i + '</a>' + "&nbsp;&nbsp;&nbsp;&nbsp;Price is: " + str(dict_new[i]) + "<br />"
+                out_file.write(line)
 
-        line = "===================================== Price reduced AGAIN! ===========================================<br />"
-        out_file.write(line)
-        for i in dict_disc_again:
-            line = 'Link is : <a href="' + i + '">' + i + '</a>' + "<pre>    Price is: " + str(dictnow[i]) + "Old price is: " + str(dictred[i]) + "</pre><br />"
+        if not dict_disc_again:
+            line = ""
+        else:
+            line = "<center><h2>  Price reduced AGAIN! </center></h2>"
             out_file.write(line)
+            for i in dict_disc_again:
+                line = 'Link is : <a href="' + i + '">' + i + '</a>' + "&nbsp;&nbsp;&nbsp;&nbsp;Price is: " + str(dictnow[i]) + "&nbsp;&nbsp;&nbsp;&nbsp;Old price is: " + str(dictred[i]) + "<br />"
+                out_file.write(line)
 
-        line = "========================================= Price reduced ===========================================<br />"
-        out_file.write(line)
-        for i in dict_disc:
-            line = 'Link is : <a href="' + i + '">' + i + '</a>' + "<pre>    Price is: " + str(dict_disc[i]) + "</pre><br />"
+        if not dict_disc:
+            line = ""
+        else:
+            line = "<center><h2>  Price reduced </center></h2> "
             out_file.write(line)
+            for i in dict_disc:
+                line = 'Link is : <a href="' + i + '">' + i + '</a>' + "&nbsp;&nbsp;&nbsp;&nbsp;Price is: " + str(dict_disc[i]) + "<br />"
+                out_file.write(line)
 
-        line = "========================================= Old Cars ==============================================<br />"
-        out_file.write(line)
-        for i in dict_nochanges:
-            line = 'Link is : <a href="' + i + '">' + i + '</a>' + "<pre>    Price is: " + dict_nochanges[i] + "</pre><br />"
+        if not dict_nochanges:
+            line = ""
+        else:
+            line = "<center><h2>  Old Cars </center></h2>"
             out_file.write(line)
+            for i in dict_nochanges:
+                line = 'Link is : <a href="' + i + '">' + i + '</a>' + "&nbsp;&nbsp;&nbsp;&nbsp;Price is: " + dict_nochanges[i] + "<br />"
+                out_file.write(line)
 
-        for i in dict_red_nochanges:
-            line = 'Link is : <a href="' + i + '">' + i + '</a>' + "Price is: " + dict_red_nochanges[i] + "<br />"
-            out_file.write(line)
+        if not dict_red_nochanges:
+            line = ""
+        else:
+            for i in dict_red_nochanges:
+                line = 'Link is : <a href="' + i + '">' + i + '</a>' + "&nbsp;&nbsp;&nbsp;&nbsp;Price is: " + dict_red_nochanges[i] + "<br />"
+                out_file.write(line)
 
 
 def cli_output():
@@ -173,6 +189,7 @@ def cli_output():
 car_list(cars,carslinks)
 print('Program is running, please wait ~30 seconds')
 parse()                     # get all links
+exit_text()
 remove_weak_dict()          # remove 116, 118, 320, etc..
 #open_json()                # load data from files
 compare()                   # compare dictionaries

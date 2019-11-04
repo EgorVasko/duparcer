@@ -72,5 +72,9 @@ def exit_procedures():
     os.remove(old_old)
 
 
+def timer():
+    print(f'Execution time: {round(time.time()-t1,3)} seconds.')
+
+
 def exit_text():
     print(f'Completed\nExecution time: {round(time.time()-t1,3)} seconds.')

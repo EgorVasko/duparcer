@@ -5,6 +5,7 @@
 # to do:    - json to def
 #           - check price changes
 #           - optimize remove weak
+#           - check for sold, add in a separate file
 # ############################
 
 from urllib import request
@@ -34,7 +35,8 @@ is2 = 'https://dubai.dubizzle.com/motors/used-cars/lexus/is-f/?price__gte=&price
 is3 = 'https://dubai.dubizzle.com/motors/used-cars/lexus/is-series/?price__gte=&price__lte=25000&year__gte=2006&year__lte=&kilometers__gte=&kilometers__lte=230000'
 z350 = 'https://dubai.dubizzle.com/motors/used-cars/nissan/350z/?price__gte=&price__lte=29000&year__gte=2006&year__lte=&kilometers__gte=&kilometers__lte=230000'
 bmw5 = 'https://dubai.dubizzle.com/motors/used-cars/bmw/5-series/?price__gte=&price__lte=25000&year__gte=2004&year__lte=&kilometers__gte=&kilometers__lte=230000'
-cars = [infi, x3, bmw3, bmw1, a4, a5, is1, is2, is3, z350, bmw5]
+clk = 'https://dubai.dubizzle.com/motors/used-cars/mercedes-benz/clk-class/?price__gte=&price__lte=25000&year__gte=2004&year__lte=&kilometers__gte=&kilometers__lte=130000'
+cars = [infi, x3, bmw3, bmw1, a4, a5, is1, is2, is3, z350, bmw5, clk]
 #cars = [bmw3]#test cars for faster parcing
 
 dictold = {}
@@ -74,7 +76,9 @@ def parse():
 
 def remove_weak_dict():
     for i in dict_new_raw:
-        if "116" in str(i) or "118" in str(i) or "120" in str(i) or "316" in str(i) or "320" in str(i) or "323" in str(i) or "325" in str(i) or "250" in str(i):
+        if "116" in str(i) or "118" in str(i) or "120" in str(i)\
+                or "316" in str(i) or "320" in str(i) or "323" in str(i) or "325" in str(i) or "250" in str(i)\
+                or "520" in str(i) or "525" in str(i) or "523" in str(i) or "318" in str(i) or "116" in str(i):
             continue
         else:
             dictnow[i] = dict_new_raw[i]
@@ -189,7 +193,7 @@ def cli_output():
 car_list(cars,carslinks)
 print('Program is running, please wait ~30 seconds')
 parse()                     # get all links
-exit_text()
+timer()
 remove_weak_dict()          # remove 116, 118, 320, etc..
 #open_json()                # load data from files
 compare()                   # compare dictionaries

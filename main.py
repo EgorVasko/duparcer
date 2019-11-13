@@ -1,11 +1,4 @@
-#!/usr/bin/env python
-# ############################
-# My first parser
-# v0.01
-# to do:    - json to def
-#           - check price changes
-#           - optimize remove weak
-# ############################
+
 
 from urllib import request
 from parcerfunc import *

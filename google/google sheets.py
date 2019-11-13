@@ -13,7 +13,6 @@ sheet = client.open('duparcer').sheet1
 sheet.append_row(['Title','Link','Price','Year','Mileage'])
 
 
-
 for i in jobs_lxml:
     if "116" in str(i['title']) or "118" in str(i['title']) or "120" in str(i['title']) or "316" in str(i['title']) or "320" in str(i['title']) \
         or "323" in str(i['title']) or "325" in str(i['title']) or "250" in str(i['title']) or "318" in str(i['title']) or "520" in str(i['title']) \

@@ -1,8 +1,14 @@
 #!/usr/bin/env python3
 import requests, lxml, re, time
 from bs4 import BeautifulSoup as bs
-import csv, json
+import json
+import getpass
+import platform
+import os
+import datetime
 
+today = datetime.datetime.today()
+time_of_parse = today.strftime("%Y-%m-%d %H:%M:%S")
 
 infi = 'https://dubai.dubizzle.com/motors/used-cars/infiniti/gseries/?price__gte=&price__lte=25000&year__gte=2009&year__lte=&kilometers__gte=&kilometers__lte=230000'
 x3 = 'https://dubai.dubizzle.com/motors/used-cars/bmw/x3/?price__gte=&price__lte=25000&year__gte=2007&year__lte=&kilometers__gte=&kilometers__lte=230000'
@@ -18,12 +24,12 @@ z350 = 'https://dubai.dubizzle.com/motors/used-cars/nissan/350z/?price__gte=&pri
 bmw5 = 'https://dubai.dubizzle.com/motors/used-cars/bmw/5-series/?price__gte=&price__lte=25000&year__gte=2004&year__lte=&kilometers__gte=&kilometers__lte=230000'
 clk = 'https://dubai.dubizzle.com/motors/used-cars/mercedes-benz/clk-class/?price__gte=&price__lte=29000&year__gte=2005&year__lte=&kilometers__gte=&kilometers__lte=190000'
 cars = [infi, x3, bmw3, bmw1, a4, a5, a6, is1, is2, is3, z350, bmw5, clk]
-# test = 'https://dubai.dubizzle.com/motors/used-cars/bmw/5-series/?price__gte=&price__lte=9999000&year__gte=1990&year__lte=&kilometers__gte=&kilometers__lte=930000'
-# cars = [test]
+#test = 'https://dubai.dubizzle.com/motors/used-cars/bmw/5-series/?price__gte=&price__lte=9999000&year__gte=1990&year__lte=&kilometers__gte=&kilometers__lte=930000'
+#cars = [test]
 
 parsed = []
+parsed1 = []
 carslinks = []
-
 dictold = []
 dictred =[]
 dict_new = []
@@ -96,56 +102,8 @@ def dubizzle_parse_lxml(base_url):  # main parse
         print("error")
 
 
-def open_json():
-    try:
-        with open("lxml_data.json", "r") as old_file:   #encoding='utf-8'
-            dictold = json.load(old_file)
-        with open("lxml_data_disc.json", "r") as disc_file:   #encoding='utf-8'
-            dictred = json.load(disc_file)
-    except:
-        dictold = []
-        dictred = []
 
 
-def compare(list):
-    for i in list:
-        for x in dictred:
-            if i['href'] == x['href']:
-                if i['price'] < x['price']:
-                    dict_disc_again.append(i)        # add to again discounted
-                    continue
-                if i['price'] >= x['price']:
-                    dict_red_nochanges.append(i)
-                    continue
-
-    parsed1 = []
-    for i in dict_disc_again:
-        for x in parsed:
-            if i != x:
-                parsed1.append(x)
-    list = []
-    for i in dict_red_nochanges:
-        for x in parsed1:
-            if i != x:
-                list.append(x)
-    for i in list:
-        for z in dictold:
-            if i['href'] == z['href']:
-                if i['price'] < z['price']:
-                    dict_disc.append(i)
-                    continue
-                if i['price'] >= z['price']:
-                    dict_nochanges.append(i)
-                    continue
-    parsed1 = []
-    for i in dict_disc:
-        for x in list:
-            if i != x:
-                parsed1.append(x)
-    for i in dict_nochanges:
-        for x in parsed1:
-            if i != x:
-                dict_new.append(x)
 
 
 def dump_data():
@@ -157,16 +115,26 @@ def dump_data():
         json.dump(out_new, write_file)
 
 
+def OSIS(): # define path to Desktop folder
+    if platform.system() == "Windows":
+        return("C:\\Users\\" + getpass.getuser() + "\Desktop\\") # try os.path.expanduser('~')
+    elif platform.system() == "Linux":
+        return(os.path.expanduser('~') + "/Desktop/")
+    else:
+        return('')
+
+
 def load_to_html():
-    with open('output.html', 'w+') as out_file:
+    with open(path + 'output_lxml.html', 'w+') as out_file:
         if not dict_new:
-            line = "<center><h2> No new cars " + "</center></h2>"
+            line = "<center><h2> No new cars " + time_of_parse + "</center></h2>"
             out_file.write(line)
         if dict_new:
-            line = "<center><h2> New cars " + "</center></h2>"
+            line = "<center><h2> New cars " + time_of_parse + "</center></h2>"
             out_file.write(line)
             for i in dict_new:
-                line = 'Link is : <a href="' + i['href'] + '">' + i['href'] + '</a>' + "&nbsp;&nbsp;&nbsp;&nbsp;Price is: " + i['price'] + "<br />"
+                line = 'Link is : <a href="' + i['href'] + '">' + i['href'] + '</a>' + "&nbsp;&nbsp;&nbsp;&nbsp;Price is: " +\
+                       i['price'] + "&nbsp;&nbsp;&nbsp;&nbsp;Year is: " + i['year'] + " Mileage is: " + i['mileage'] + "<br />"
                 out_file.write(line)
 
         if not dict_disc_again:
@@ -178,7 +146,9 @@ def load_to_html():
                 for x in dictred:
                     if i['href'] == x['href']:
                         oldprice = x['price']
-                line = 'Link is : <a href="' + i['href'] + '">' + i['href'] + '</a>' + "&nbsp;&nbsp;&nbsp;&nbsp;Price is: " + i['price'] + "&nbsp;&nbsp;&nbsp;&nbsp;Old price is: " + oldprice + "<br />"
+                line = 'Link is : <a href="' + i['href'] + '">' + i['href'] + '</a>' + "&nbsp;&nbsp;&nbsp;&nbsp;Price is: " + \
+                       i['price'] + "&nbsp;&nbsp;&nbsp;&nbsp;Year is: " + i['year'] + " Mileage is: " + i['mileage'] + \
+                       "&nbsp;&nbsp;&nbsp;&nbsp;Old price is: " + dict_disc_again[i].get('price') + "<br />"
                 out_file.write(line)
 
         if not dict_disc:
@@ -187,7 +157,8 @@ def load_to_html():
             line = "<center><h2>  Price reduced </center></h2> "
             out_file.write(line)
             for i in dict_disc:
-                line = 'Link is : <a href="' + i['href'] + '">' + i['href'] + '</a>' + "&nbsp;&nbsp;&nbsp;&nbsp;Price is: " + i['price'] + "<br />"
+                line = 'Link is : <a href="' + i['href'] + '">' + i['href'] + '</a>' + "&nbsp;&nbsp;&nbsp;&nbsp;Price is: " + \
+                       i['price'] + "&nbsp;&nbsp;&nbsp;&nbsp;Year is: " + i['year'] + " Mileage is: " + i['mileage'] + "<br />"
                 out_file.write(line)
 
         if not dict_nochanges:
@@ -196,46 +167,17 @@ def load_to_html():
             line = "<center><h2>  Old Cars </center></h2>"
             out_file.write(line)
             for i in dict_nochanges:
-                line = 'Link is : <a href="' + i['href'] + '">' + i['href'] + '</a>' + "&nbsp;&nbsp;&nbsp;&nbsp;Price is: " + i['price'] + "<br />"
+                line = 'Link is : <a href="' + i['href'] + '">' + i['href'] + '</a>' + "&nbsp;&nbsp;&nbsp;&nbsp;Price is: " + \
+                       i['price'] + "&nbsp;&nbsp;&nbsp;&nbsp;Year is: " + i['year'] + " Mileage is: " + i['mileage'] + "<br />"
                 out_file.write(line)
 
         if not dict_red_nochanges:
             line = ""
         else:
             for i in dict_red_nochanges:
-                line = 'Link is : <a href="' + i['href'] + '">' + i['href'] + '</a>' + "&nbsp;&nbsp;&nbsp;&nbsp;Price is: " + i['price'] + "<br />"
+                line = 'Link is : <a href="' + i['href'] + '">' + i['href'] + '</a>' + "&nbsp;&nbsp;&nbsp;&nbsp;Price is: " + \
+                       i['price'] + "&nbsp;&nbsp;&nbsp;&nbsp;Year is: " + i['year'] + " Mileage is: " + i['mileage'] + "<br />"
                 out_file.write(line)
-
-# ================================== Execution
-
-carlink(carslinks)
-
-print("Program is running. Estimated completion time is ~30 seconds.\nPlease wait...")
-
-start = time.time()
-for i in cars:
-    dubizzle_parse_lxml(i)
-finish = time.time()
-result = round(finish - start,2)
-
-print('Parcing completed with lxml method:', result, "seconds\nTotal:" ,len(parsed),"cars parsed")
-
-for i in parsed:
-    print(i)
-print(dictred)
-print(dictold)
-
-compare(parsed)       # comparing, sorting
-
-print(dict_new)
-print(dict_red_nochanges)
-print(dict_disc_again)
-print(dict_disc)
-print(dict_nochanges)
-
-
-dump_data()     # dumping to base
-load_to_html()  # html
 
 
 def cli_output():
@@ -254,4 +196,93 @@ def cli_output():
     for i in dict_red_nochanges:
         print("OLD                  Key = " + i['href'] + "    Value =     " + i['price'])
 
-cli_output()
+# ================================== Execution
+
+
+carlink(carslinks)  # compiling list of links
+
+
+print("Program is running. Estimated completion time is ~30 seconds.\nPlease wait...")
+
+# =========================== open database
+try:
+    with open("lxml_data.json", "r") as old_file:   #encoding='utf-8'
+        dictold = json.load(old_file)
+    with open("lxml_data_disc.json", "r") as disc_file:   #encoding='utf-8'
+        dictred = json.load(disc_file)
+    print("Old results are avaliable...")
+except:
+    dictold = []
+    dictred = []
+# ==============================================================    parsing started
+start = time.time()
+for i in cars:
+    dubizzle_parse_lxml(i)
+finish = time.time()
+result = round(finish - start,2)
+
+print('Parcing completed with lxml method:', result, "seconds\nTotal:" ,len(parsed),"cars parsed")
+
+path = OSIS()
+# =========================================== comparison with old data
+
+indextoremove = []
+parsed1 = parsed.copy()
+
+for i in range(0, len(parsed)):
+    for z in range (len(dictred)):
+        if parsed[i].get('href') == dictred[z].get('href'):
+            if parsed[i].get('price') < dictred[z].get('price'):
+                indextoremove.append(i)
+                dict_disc_again.append(parsed[i])
+                continue
+            if parsed[i].get('price') >= dictred[z].get('price'):
+                dict_red_nochanges.append(parsed[i])
+                indextoremove.append(i)
+                continue
+
+"""
+print(dict_disc_again, dict_red_nochanges)
+print('=============from reduced')
+print(parsed1, indextoremove)
+"""
+
+indextoremove.reverse()
+for i in indextoremove:
+    parsed1.pop(i)
+indextoremove.clear()
+"""
+print(parsed1)
+print(indextoremove,"remove")
+"""
+#===============================================================
+for i in range(0,len(parsed1)):
+    for z in range(len(dictold)):
+        if parsed1[i].get('href') == dictold[z].get('href'):
+            if parsed1[i].get('price') < dictold[z].get('price'):
+                indextoremove.append(i)
+                dict_disc.append(parsed[i])
+                continue
+            if parsed1[i].get('price') >= dictold[z].get('price'):
+                dict_nochanges.append(parsed[i])
+                indextoremove.append(i)
+                continue
+"""
+print(dict_disc, dict_nochanges)
+print('============= now from old')
+print(parsed1, indextoremove)
+"""
+indextoremove.reverse()
+
+for i in indextoremove:
+    parsed1.pop(i)
+
+indextoremove.clear()
+dict_new = parsed1
+
+
+#=========================
+dump_data()     # dumping to base
+load_to_html()  # html
+
+#cli_output()

@@ -282,6 +282,12 @@ dict_new = parsed1
 
 
 #=========================
+
+if (len(dict_new)) > 0:
+    print(len(dict_new),"New cars found")
+else:
+    print("No new cars")
+
 dump_data()     # dumping to base
 load_to_html()  # html
 

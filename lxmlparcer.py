@@ -9,6 +9,7 @@ import getpass
 import platform
 import os
 import datetime
+from urllib.parse import urlsplit
 
 today = datetime.datetime.today()
 time_of_parse = today.strftime("%Y-%m-%d %H:%M:%S")
@@ -76,6 +77,11 @@ def dubizzle_parse_lxml(base_url):  # main parse
         for div in divs:
             title = div.find('a').text
             title = title.strip()
+            # issues with title:    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+            #                       UnicodeEncodeError: 'charmap' codec can't encode characters in position 126-130: character maps to <undefined>
+            # trying do encode
+            # title = title.encode('utf-8')
+            # end of try
             href = div.find('a')['href']
             href = (href[0: + href.find('?back')])
             price = div.find('div', attrs={"class": "price"}).text
@@ -96,19 +102,38 @@ def dubizzle_parse_lxml(base_url):  # main parse
                 year = features[year_index + 6: 10]
                 mileage = features[mileage_index + 25: 32]
                 mileage = re.sub(r'\D', '', mileage)
+            # add code from sandbox here
+            parse_result = urlsplit(href)
+            query_s = parse_result.path
+            car_data = query_s.split("/")
+            car_data = car_data[3:9]
+            brand = str(car_data[0]).capitalize()
+            model = str(car_data[1]).capitalize()
+            # ad_posted = str(car_data[2]) + "-" + str(car_data[3]) + "-" + str(car_data[4])
+            if len(str(car_data[3])) == 1:
+                month = "0" + str(car_data[3])
+            else:
+                month = str(car_data[3])
+            if len(str(car_data[4])) == 1:
+                date = "0" + str(car_data[4])
+            else:
+                date = str(car_data[4])
+            ad_posted = str(car_data[2]) + "-" + month + "-" + date
+            title_test = str(car_data[5]).replace("-", " ")
+            # end of sandbox
             parsed.append({
                 'title': title,
                 'href': href,
                 'price': price,
                 'year': year,
-                'mileage': mileage
+                'mileage': mileage,
+                'brand' : brand,
+                'model' : model,
+                'ad_posted' : ad_posted,
+                'title_test' : title_test
             })
     else:
         print("error")
-
-
-
-
 
 
 def dump_data():
@@ -172,8 +197,14 @@ def load_to_html():
             line = "<center><h2>  Old Cars </center></h2>"
             out_file.write(line)
             for i in dict_nochanges:
-                line = 'Link is : <a href="' + i['href'] + '">' + i['href'] + '</a>' + "&nbsp;&nbsp;&nbsp;&nbsp;Price is: " + \
-                       i['price'] + "&nbsp;&nbsp;&nbsp;&nbsp;Year is: " + i['year'] + " Mileage is: " + i['mileage'] + "<br />"
+                """
+                line = 'Link is : <a href="' + i['href'] + '">' + i['title_test'] + '</a>' + "&nbsp;&nbsp;&nbsp;&nbsp;Price is: " + \
+                       i['price'] + " Year is: " + i['year'] + " Mileage is: " + i['mileage'] + \
+                       " Model is: " + i['brand'] + " " + i['model'] + " Ad posted: " + i['ad_posted'] +"<br />"
+                """
+                line = "<b>Ad posted:</b> " + i['ad_posted'] + " <b>Model is:</b> " + i['brand'] + " " + i['model'] + " <b>Price is:</b> " + i['price'] + \
+                       " <b>Year is:</b> " + i['year'] + " <b>Mileage is:</b> " + i['mileage'] + ' <b>Link is :</b> <a href="' + i['href'] + '">' + \
+                       i['title_test'] + '</a>' + "<br />"
                 out_file.write(line)
 
         if not dict_red_nochanges:

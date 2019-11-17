@@ -1,24 +1,32 @@
 from urllib.parse import urlsplit
 
-parse_result = urlsplit("https://dubai.dubizzle.com/motors/used-cars/infiniti/gseries/2019/10/28/%D9%88%D8%B1%D8%B3%D8%A7%D9%86-2/")
+href = "https://dubai.dubizzle.com/motors/used-cars/audi/a6/2019/9/15/audi-a6-32l-qattro-v-6-sedan--2/"
+
+parse_result = urlsplit(href)
 query_s = parse_result.path
 car_data = query_s.split("/")
+title = car_data[8].replace("-"," ")
+print(title)
 car_data = car_data[3:8]
+brand = str(car_data[0]).capitalize()
+model = str(car_data[1])
 
-for i in car_data:
-    print(i)
+if len(str(car_data[3])) == 1:
+    month = "0" + str(car_data[3])
+else:
+    month = str(car_data[3])
+if len(str(car_data[4])) == 1:
+    date = "0" + str(car_data[4])
+else:
+    date = str(car_data[4])
+ad_posted = str(car_data[2]) + "-" + month + "-" + date
 
-DICT = []
-DICT.append({
-    'brand' : car_data[0],
-    'model' : car_data[1],
-    'ad_posted' : str(car_data[2]) + "-" + str(car_data[3]) + "-" + str(car_data[4])
-#    'title': title,
-#    'href': href,
-#    'price': price,
-#    'year': year,
-#    'mileage': mileage
-    
+parsed = []
+parsed.append({
+
+    'brand' : brand,
+    'model' : model,
+    'ad_posted' : ad_posted
 })
 
-print(DICT)
+print(parsed)

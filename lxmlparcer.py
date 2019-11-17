@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+
+# link can be changed from dubai to uae
+
 import requests, lxml, re, time
 from bs4 import BeautifulSoup as bs
 import json
@@ -23,7 +26,9 @@ is3 = 'https://dubai.dubizzle.com/motors/used-cars/lexus/is-series/?price__gte=&
 z350 = 'https://dubai.dubizzle.com/motors/used-cars/nissan/350z/?price__gte=&price__lte=29000&year__gte=2006&year__lte=&kilometers__gte=&kilometers__lte=230000'
 bmw5 = 'https://dubai.dubizzle.com/motors/used-cars/bmw/5-series/?price__gte=&price__lte=25000&year__gte=2004&year__lte=&kilometers__gte=&kilometers__lte=230000'
 clk = 'https://dubai.dubizzle.com/motors/used-cars/mercedes-benz/clk-class/?price__gte=&price__lte=29000&year__gte=2005&year__lte=&kilometers__gte=&kilometers__lte=190000'
-cars = [infi, x3, bmw3, bmw1, a4, a5, a6, is1, is2, is3, z350, bmw5, clk]
+z3 = 'https://dubai.dubizzle.com/motors/used-cars/bmw/z3/?price__gte=&price__lte=29000&year__gte=1998&year__lte=&kilometers__gte=&kilometers__lte=190000'
+z4 = 'https://dubai.dubizzle.com/motors/used-cars/bmw/z4/?price__gte=&price__lte=26000&year__gte=1998&year__lte=&kilometers__gte=&kilometers__lte=190000'
+cars = [infi, x3, bmw3, bmw1, a4, a5, a6, is1, is2, is3, z350, bmw5, clk, z3, z4]
 #test = 'https://dubai.dubizzle.com/motors/used-cars/bmw/5-series/?price__gte=&price__lte=9999000&year__gte=1990&year__lte=&kilometers__gte=&kilometers__lte=930000'
 #cars = [test]
 

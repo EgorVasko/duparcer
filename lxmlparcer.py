@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 # link can be changed from dubai to uae
+# Check price reduced
 
 import requests, lxml, re, time
 from bs4 import BeautifulSoup as bs
@@ -155,6 +156,7 @@ def OSIS(): # define path to Desktop folder
 
 
 def load_to_html():
+    counter = 1
     with open(path + 'output_lxml.html', 'w+') as out_file:
         if not dict_new:
             line = "<center><h2> No new cars " + time_of_parse + "</center></h2>"
@@ -163,8 +165,9 @@ def load_to_html():
             line = "<center><h2> New cars " + time_of_parse + "</center></h2>"
             out_file.write(line)
             for i in dict_new:
-                line = 'Link is : <a href="' + i['href'] + '">' + i['href'] + '</a>' + "&nbsp;&nbsp;&nbsp;&nbsp;Price is: " +\
-                       i['price'] + "&nbsp;&nbsp;&nbsp;&nbsp;Year is: " + i['year'] + " Mileage is: " + i['mileage'] + "<br />"
+                line = "<b>Ad posted:</b> " + i['ad_posted'] + " <b>Model is:</b> " + i['brand'] + " " + i['model'] + " <b>Price is:</b> " + i['price'] + \
+                       " <b>Year is:</b> " + i['year'] + " <b>Mileage is:</b> " + i['mileage'] + ' <b>Link is :</b> <a href="' + i['href'] + '">' + \
+                       i['title_test'] + '</a>' + "<br />"
                 out_file.write(line)
 
         if not dict_disc_again:
@@ -176,9 +179,9 @@ def load_to_html():
                 for x in dictred:
                     if i['href'] == x['href']:
                         oldprice = x['price']
-                line = 'Link is : <a href="' + i['href'] + '">' + i['href'] + '</a>' + "&nbsp;&nbsp;&nbsp;&nbsp;Price is: " + \
-                       i['price'] + "&nbsp;&nbsp;&nbsp;&nbsp;Year is: " + i['year'] + " Mileage is: " + i['mileage'] + \
-                       "&nbsp;&nbsp;&nbsp;&nbsp;Old price is: " + dict_disc_again[i].get('price') + "<br />"
+                line = "<b>Ad posted:</b> " + i['ad_posted'] + " <b>Model is:</b> " + i['brand'] + " " + i['model'] + " <b>Price is:</b> " + i['price'] + \
+                       " Old price is: " + dict_disc_again[i].get('price') + " <b>Year is:</b> " + i['year'] + " <b>Mileage is:</b> " + i['mileage'] + \
+                       ' <b>Link is :</b> <a href="' + i['href'] + '">' + i['title_test'] + '</a>' + "<br />"
                 out_file.write(line)
 
         if not dict_disc:
@@ -187,8 +190,9 @@ def load_to_html():
             line = "<center><h2>  Price reduced </center></h2> "
             out_file.write(line)
             for i in dict_disc:
-                line = 'Link is : <a href="' + i['href'] + '">' + i['href'] + '</a>' + "&nbsp;&nbsp;&nbsp;&nbsp;Price is: " + \
-                       i['price'] + "&nbsp;&nbsp;&nbsp;&nbsp;Year is: " + i['year'] + " Mileage is: " + i['mileage'] + "<br />"
+                line = "<b>Ad posted:</b> " + i['ad_posted'] + " <b>Model is:</b> " + i['brand'] + " " + i['model'] + " <b>Price is:</b> " + i['price'] + \
+                       " Old price is: " + dict_nochanges[i].get('price') + " <b>Year is:</b> " + i['year'] + " <b>Mileage is:</b> " + i['mileage'] + \
+                       ' <b>Link is :</b> <a href="' + i['href'] + '">' + i['title_test'] + '</a>' + "<br />"
                 out_file.write(line)
 
         if not dict_nochanges:
@@ -211,8 +215,9 @@ def load_to_html():
             line = ""
         else:
             for i in dict_red_nochanges:
-                line = 'Link is : <a href="' + i['href'] + '">' + i['href'] + '</a>' + "&nbsp;&nbsp;&nbsp;&nbsp;Price is: " + \
-                       i['price'] + "&nbsp;&nbsp;&nbsp;&nbsp;Year is: " + i['year'] + " Mileage is: " + i['mileage'] + "<br />"
+                line = "<b>Ad posted:</b> " + i['ad_posted'] + " <b>Model is:</b> " + i['brand'] + " " + i['model'] + " <b>Price is:</b> " + i['price'] + \
+                       " <b>Year is:</b> " + i['year'] + " <b>Mileage is:</b> " + i['mileage'] + ' <b>Link is :</b> <a href="' + i['href'] + '">' + \
+                       i['title_test'] + '</a>' + "<br />"
                 out_file.write(line)
 
 

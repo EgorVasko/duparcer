@@ -2,6 +2,8 @@
 
 # link can be changed from dubai to uae
 # Check price reduced
+# redo output to table`
+# sort output by date
 
 import requests, lxml, re, time
 from bs4 import BeautifulSoup as bs
@@ -39,11 +41,14 @@ parsed1 = []
 carslinks = []
 dictold = []
 dictred =[]
+
 dict_new = []
 dict_nochanges = []
 dict_disc_again = []
 dict_disc = []
 dict_red_nochanges = []
+
+dicttosort = [dict_new,dict_nochanges,dict_disc,dict_disc_again,dict_red_nochanges]
 
 # =============================== functions
 
@@ -328,6 +333,22 @@ if (len(dict_new)) > 0:
     print(len(dict_new),"New cars found")
 else:
     print("No new cars")
+
+# ============================== sorting by date
+
+
+def sort_by_parametr(list_to_sort,parametr):
+    for x in range(len(list_to_sort)-1,0,-1):
+        for i in range(x):
+            if list_to_sort[i].get(parametr) < list_to_sort[i+1].get(parametr):
+                list_to_sort[i], list_to_sort[i+1] = list_to_sort[i+1], list_to_sort[i]
+
+
+sort = 'ad_posted'
+
+for i in dicttosort:
+    sort_by_parametr(i,sort)
+# ============================== sorting by date
 
 dump_data()     # dumping to base
 load_to_html()  # html

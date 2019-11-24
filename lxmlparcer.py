@@ -5,6 +5,7 @@
 # redo output to table`
 # sort output by date
 
+import sys
 import requests
 from bs4 import BeautifulSoup as bs
 import json
@@ -58,6 +59,7 @@ dict_disc_again = []
 dicttosort = [dict_new, dict_nochanges, dict_disc, dict_disc_again, dict_red_nochanges]
 
 
+
 # =============================== functions
 
 
@@ -69,85 +71,94 @@ def carlink(list_of_cars):  # links to list
 def dubizzle_parse_lxml(base_url):  # main parse
     urls = [base_url]  # urls = []    urls.append(base_url)
     session = requests.Session()
-    request = session.get(base_url)
-    if request.status_code == 200:
-        soup = bs(request.content, "lxml")
-        '''
-        try: # not working
-            pagination = soup.find_all('a', attrs={"class" : "page-links"} )
-            last_page = int(pagination[-1].text)
-            print("last page number is: " + last_page)
-            for i in range(last_page):
-                url = str(base_url) + "&page=" + str(i)
-                if url not in urls:
-                    urls.append(url)
-                print(url)
-        except:
-            pass'''
-        divs = soup.find_all('div', attrs={"id": "featured-listing-item"})
-        divs += soup.find_all('div', attrs={"class": "cf item paid-featured-item featured-motors"})
-        divs += soup.find_all('div', attrs={"class": "cf item"})
-        for div in divs:
-            title = div.find('a').text
-            title = title.strip()
-            # issues with title:    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
-            #                       UnicodeEncodeError: 'charmap' codec can't encode characters in position 126-130: character maps to <undefined>
-            # trying do encode
-            # title = title.encode('utf-8')
-            # end of try
-            href = div.find('a')['href']
-            href = (href[0: + href.find('?back')])
-            price = div.find('div', attrs={"class": "price"}).text
-            price = price.strip()
-            price = re.sub(r'\D', '', price)
+    for i in urls:
+        request = session.get(i)
+        if request.status_code == 200:
+            soup = bs(request.content, "lxml")
             try:
-                features = div.find("ul", attrs={"class": "features"}).text
-                year_index = features.find('Year:')
-                mileage_index = features.find('Mileage:')
-                year = features[year_index + 6: 11]
-                mileage = features[mileage_index + 25: 32]
-                mileage = re.sub(r'\D', '', mileage)
+                pagination = soup.find_all('a', attrs={"class" : "page-links"} )
+                last_page = int(pagination[-1].text)
+                print("last page number is: " + str(last_page))
+                for i in range(1,last_page):
+                    url = str(base_url) + "&page=" + str(i+1)
+                    if url not in urls:
+                        urls.append(url)
             except:
-                features = div.find("ul", attrs={"class": "featured_listing_features"}).text
-                features = features.strip()
-                year_index = features.find('Year:')
-                mileage_index = features.find('Mileage:')
-                year = features[year_index + 6: 10]
-                mileage = features[mileage_index + 25: 32]
-                mileage = re.sub(r'\D', '', mileage)
-            # add code from sandbox here
-            parse_result = urlsplit(href)
-            query_s = parse_result.path
-            car_data = query_s.split("/")
-            car_data = car_data[3:9]
-            brand = str(car_data[0]).capitalize()
-            model = str(car_data[1]).capitalize()
-            # ad_posted = str(car_data[2]) + "-" + str(car_data[3]) + "-" + str(car_data[4])
-            if len(str(car_data[3])) == 1:
-                month = "0" + str(car_data[3])
-            else:
-                month = str(car_data[3])
-            if len(str(car_data[4])) == 1:
-                date = "0" + str(car_data[4])
-            else:
-                date = str(car_data[4])
-            ad_posted = str(car_data[2]) + "-" + month + "-" + date
-            title_test = str(car_data[5]).replace("-", " ")
-            # end of sandbox
-            parsed.append({
-                'title': title,
-                'href': href,
-                'price': price,
-                'year': year,
-                'mileage': mileage,
-                'brand': brand,
-                'model': model,
-                'ad_posted': ad_posted,
-                'title_test': title_test
-            })
-    else:
-        print("error")
-
+                pass
+            divs = soup.find_all('div', attrs={"id": "featured-listing-item"})
+            divs += soup.find_all('div', attrs={"class": "cf item paid-featured-item featured-motors"})
+            divs += soup.find_all('div', attrs={"class": "cf item"})
+            for div in divs:
+                title = div.find('a').text
+                title = title.strip()
+                # issues with title:    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+                #                       UnicodeEncodeError: 'charmap' codec can't encode characters in position 126-130: character maps to <undefined>
+                # trying do encode
+                # title = title.encode('utf-8')
+                # end of try
+                href = div.find('a')['href']
+                href = (href[0: + href.find('?back')])
+                price = div.find('div', attrs={"class": "price"}).text
+                price = price.strip()
+                price = re.sub(r'\D', '', price)
+                try:
+                    features = div.find("ul", attrs={"class": "features"}).text
+                    year_index = features.find('Year:')
+                    mileage_index = features.find('Mileage:')
+                    year = features[year_index + 6: 11]
+                    mileage = features[mileage_index + 25: 32]
+                    mileage = re.sub(r'\D', '', mileage)
+                except:
+                    features = div.find("ul", attrs={"class": "featured_listing_features"}).text
+                    features = features.strip()
+                    year_index = features.find('Year:')
+                    mileage_index = features.find('Mileage:')
+                    year = features[year_index + 6: 10]
+                    mileage = features[mileage_index + 25: 32]
+                    mileage = re.sub(r'\D', '', mileage)
+                # add code from sandbox here
+                parse_result = urlsplit(href)
+                query_s = parse_result.path
+                car_data = query_s.split("/")
+                car_data = car_data[3:9]
+                brand = str(car_data[0]).capitalize()
+                model = str(car_data[1]).capitalize()
+                # ad_posted = str(car_data[2]) + "-" + str(car_data[3]) + "-" + str(car_data[4])
+                if len(str(car_data[3])) == 1:
+                    month = "0" + str(car_data[3])
+                else:
+                    month = str(car_data[3])
+                if len(str(car_data[4])) == 1:
+                    date = "0" + str(car_data[4])
+                else:
+                    date = str(car_data[4])
+                ad_posted = str(car_data[2]) + "-" + month + "-" + date
+                title_test = str(car_data[5]).replace("-", " ")
+                # end of sandbox
+                '''if {
+                        'title': title,
+                        'href': href,
+                        'price': price,
+                        'year': year,
+                        'mileage': mileage,
+                        'brand': brand,
+                        'model': model,
+                        'ad_posted': ad_posted,
+                        'title_test': title_test
+                    } not in parsed:'''
+                parsed.append({
+                    'title': title,
+                    'href': href,
+                    'price': price,
+                    'year': year,
+                    'mileage': mileage,
+                    'brand': brand,
+                    'model': model,
+                    'ad_posted': ad_posted,
+                    'title_test': title_test
+                })
+        else:
+            print("error")
 
 def dump_data():
     out_new = dict_nochanges + dict_new
@@ -179,39 +190,39 @@ def load_to_html():
             line = "<center><h2> New cars " + time_of_parse + "</center></h2>"
             out_file.write(line)
             for i in dict_new:
-                line = "<b>Ad posted:</b> " + i['ad_posted'] + " <b>Model is:</b> " + i['brand'] + " " + i[
+                line = str(counter) + " <b>Ad posted:</b> " + i['ad_posted'] + " <b>Model is:</b> " + i['brand'] + " " + i[
                     'model'] + " <b>Price is:</b> " + i['price'] + \
                        " <b>Year is:</b> " + i['year'] + " <b>Mileage is:</b> " + i[
                            'mileage'] + ' <b>Link is :</b> <a href="' + i['href'] + '">' + \
                        i['title_test'] + '</a>' + "<br />"
                 out_file.write(line)
-
+                counter += 1
         if not dict_disc_again:
             line = ""
         else:
             line = "<center><h2>  Price reduced AGAIN! </center></h2>"
             out_file.write(line)
             for i in dict_disc_again:
-                line = "<b>Ad posted:</b> " + i['ad_posted'] + " <b>Model is:</b> " + i['brand'] + " " + i[
+                line = str(counter) + " <b>Ad posted:</b> " + i['ad_posted'] + " <b>Model is:</b> " + i['brand'] + " " + i[
                     'model'] + " <b>Price is:</b> " + i['price'] + \
                        " Old price is: " + i['oldprice'] + " <b>Year is:</b> " + i['year'] + " <b>Mileage is:</b> " + i[
                            'mileage'] + \
                        ' <b>Link is :</b> <a href="' + i['href'] + '">' + i['title_test'] + '</a>' + "<br />"
                 out_file.write(line)
-
+                counter += 1
         if not dict_disc:
             line = ""
         else:
             line = "<center><h2>  Price reduced </center></h2> "
             out_file.write(line)
             for i in dict_disc:
-                line = "<b>Ad posted:</b> " + i['ad_posted'] + " <b>Model is:</b> " + i['brand'] + " " + i[
+                line = str(counter) + " <b>Ad posted:</b> " + i['ad_posted'] + " <b>Model is:</b> " + i['brand'] + " " + i[
                     'model'] + " <b>Price is:</b> " + i['price'] + \
                        " Old price is: " + i['oldprice'] + " <b>Year is:</b> " + i['year'] + " <b>Mileage is:</b> " + i[
                            'mileage'] + \
                        ' <b>Link is :</b> <a href="' + i['href'] + '">' + i['title_test'] + '</a>' + "<br />"
                 out_file.write(line)
-
+                counter += 1
         if not dict_nochanges:
             line = ""
         else:
@@ -223,24 +234,24 @@ def load_to_html():
                        i['price'] + " Year is: " + i['year'] + " Mileage is: " + i['mileage'] + \
                        " Model is: " + i['brand'] + " " + i['model'] + " Ad posted: " + i['ad_posted'] +"<br />"
                 """
-                line = "<b>Ad posted:</b> " + i['ad_posted'] + " <b>Model is:</b> " + i['brand'] + " " + i[
+                line = str(counter) + " <b>Ad posted:</b> " + i['ad_posted'] + " <b>Model is:</b> " + i['brand'] + " " + i[
                     'model'] + " <b>Price is:</b> " + i['price'] + \
                        " <b>Year is:</b> " + i['year'] + " <b>Mileage is:</b> " + i[
                            'mileage'] + ' <b>Link is :</b> <a href="' + i['href'] + '">' + \
                        i['title_test'] + '</a>' + "<br />"
                 out_file.write(line)
-
+                counter += 1
         if not dict_red_nochanges:
             line = ""
         else:
             for i in dict_red_nochanges:
-                line = "<b>Ad posted:</b> " + i['ad_posted'] + " <b>Model is:</b> " + i['brand'] + " " + i[
+                line = str(counter) + " <b>Ad posted:</b> " + i['ad_posted'] + " <b>Model is:</b> " + i['brand'] + " " + i[
                     'model'] + " <b>Price is:</b> " + i['price'] + \
                        " <b>Year is:</b> " + i['year'] + " <b>Mileage is:</b> " + i[
                            'mileage'] + ' <b>Link is :</b> <a href="' + i['href'] + '">' + \
                        i['title_test'] + '</a>' + "<br />"
                 out_file.write(line)
-
+                counter += 1
 
 def cli_output():
     for i in dict_new:
@@ -279,12 +290,19 @@ print("Program is running. Estimated completion time is ~30 seconds.\nPlease wai
 try:
     with open("lxml_data.json", "r") as old_file:  # encoding='utf-8'
         dictold = json.load(old_file)
+    print("Old results are avaliable: " + str(len(dictold)) + " cars")
+except:
+    print("No old results")
+    dictold = []
+
+try:
     with open("lxml_data_disc.json", "r") as disc_file:  # encoding='utf-8'
         dictred = json.load(disc_file)
-    print("Old results are avaliable...")
+    print("Old discounted results are avaliable..." + str(len(dictred)) + " cars")
 except:
-    dictold = []
     dictred = []
+    print("No old discounted results")
+
 # ==============================================================    parsing started
 start = time.time()
 for i in cars:
@@ -380,3 +398,9 @@ dump_data()  # dumping to base
 load_to_html()  # html
 
 # cli_output()
+
+print("type quit to exit")
+command = input()
+while command not in ['quit', 'exit', 'konec']:
+   command = input()
+sys.exit()

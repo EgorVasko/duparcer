@@ -5,6 +5,7 @@
 # redo output to table`
 # sort output by date
 
+import keyboard
 import sys
 import requests
 from bs4 import BeautifulSoup as bs
@@ -389,22 +390,16 @@ def sort_by_parametr(list_to_sort, parametr):
 
 sort = 'ad_posted'
 
-# for i in dicttosort:
-#    sort_by_parametr(i,sort)
 
 # ============================== sorting by date
 
 dump_data()  # dumping to base
+
+for i in dicttosort:
+    sort_by_parametr(i,sort)
+
 load_to_html()  # html
 
 # cli_output()
-
-print("type quit to exit")
-command = input()
-while command not in ['quit', 'exit', 'konec']:
-   command = input()
-sys.exit()
-
-import keyboard
-
-keyboard.sleep()
+#print("Press ESC key to exit")
+#keyboard.wait('esc','space')

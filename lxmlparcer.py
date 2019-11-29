@@ -316,61 +316,39 @@ print('Parcing completed with lxml method:', result, "seconds\nTotal:", len(pars
 path = OSIS()
 # =========================================== comparison with old data
 
-indextoremove = []
-parsed1 = parsed.copy()
 
-for i in range(0, len(parsed)):
-    for z in range(len(dictred)):
-        if parsed[i].get('href') == dictred[z].get('href'):
-            if parsed[i].get('price') < dictred[z].get('price'):
-                indextoremove.append(i)
-                parsed[i]['oldprice'] = dictred[z].get('price')  # adding old price
-                dict_disc_again.append(parsed[i])
-                continue
-            if parsed[i].get('price') >= dictred[z].get('price'):
-                dict_red_nochanges.append(parsed[i])
-                indextoremove.append(i)
-                continue
+for i in range(len(parsed),0,-1):
+    for z in range(len(dictred),0,-1):
+        if parsed[i-1].get('href') == dictred[z-1].get('href'):
+            if parsed[i-1].get('price') < dictred[z-1].get('price'):
+                parsed[i-1]['oldprice'] = dictred[z-1].get('price')  # adding old price
+                dict_disc_again.append(parsed[i-1])
+                parsed.pop(i-1)
+                dictred.pop(z-1)
+                break
+            if parsed[i-1].get('price') >= dictred[z-1].get('price'):
+                dict_red_nochanges.append(parsed[i-1])
+                parsed.pop(i-1)
+                dictred.pop(z-1)
+                break
 
-"""
-print(dict_disc_again, dict_red_nochanges)
-print('=============from reduced')
-print(parsed1, indextoremove)
-"""
-
-indextoremove.reverse()
-for i in indextoremove:
-    parsed1.pop(i)
-indextoremove.clear()
-"""
-print(parsed1)
-print(indextoremove,"remove")
-"""
 # ===============================================================
-for i in range(0, len(parsed1)):
-    for z in range(len(dictold)):
-        if parsed1[i].get('href') == dictold[z].get('href'):
-            if parsed1[i].get('price') < dictold[z].get('price'):
-                indextoremove.append(i)
-                parsed[i]['oldprice'] = dictold[z].get('price')
-                dict_disc.append(parsed[i])
-                continue
-            if parsed1[i].get('price') >= dictold[z].get('price'):
-                dict_nochanges.append(parsed[i])
-                indextoremove.append(i)
-                continue
-"""
-print(dict_disc, dict_nochanges)
-print('============= now from old')
-print(parsed1, indextoremove)
-"""
-indextoremove.reverse()
+for i in range(len(parsed),0,-1):
+    for z in range(len(dictold),0,-1):
+        if parsed[i-1].get('href') == dictold[z-1].get('href'):
+            if parsed[i-1].get('price') < dictold[z-1].get('price'):
+                parsed[i-1]['oldprice'] = dictold[z-1].get('price')
+                dict_disc.append(parsed[i-1])
+                parsed.pop(i-1)
+                dictold.pop(z-1)
+                break
+            if parsed[i-1].get('price') >= dictold[z-1].get('price'):
+                dict_nochanges.append(parsed[i-1])
+                parsed.pop(i-1)
+                dictold.pop(z-1)
+                break
 
-for i in indextoremove:
-    parsed1.pop(i)
-
-indextoremove.clear()
-dict_new = parsed1
+dict_new = parsed
 
 # =========================
 

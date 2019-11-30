@@ -3,7 +3,6 @@
 # link can be changed from dubai to uae
 # Check price reduced
 # redo output to table`
-# sort output by date
 
 import keyboard
 import sys
@@ -160,6 +159,8 @@ def dubizzle_parse_lxml(base_url):  # main parse
                 })
         else:
             print("error")
+            continue
+
 
 def dump_data():
     out_new = dict_nochanges + dict_new
@@ -254,31 +255,12 @@ def load_to_html():
                 out_file.write(line)
                 counter += 1
 
-def cli_output():
-    for i in dict_new:
-        print("NEW                  Key = " + i['href'] + "    Price =     " + i['price'])
-
-    for i in dict_disc_again:
-        print("PRICE REDUCED AGAIN! Key = " + i['href'] + "    New price = " + i['price'] + "    Old price is = " + i[
-            'price'])
-
-    for i in dict_disc:
-        print("PRICE REDUCED!       Key = " + i['href'] + "    New price = " + i['price'] + "    Old price is = " + i[
-            'price'])
-
-    for i in dict_nochanges:
-        print("OLD                  Key = " + i['href'] + "    Value =     " + i['price'])
-
-    for i in dict_red_nochanges:
-        print("OLD                  Key = " + i['href'] + "    Value =     " + i['price'])
-
 
 def exitmessage():
     if (len(dict_new)) > 0:
         print(len(dict_new), "New cars found")
     else:
         print("No new cars")
-
 
 # ================================== Execution
 
@@ -378,6 +360,5 @@ for i in dicttosort:
 
 load_to_html()  # html
 
-# cli_output()
 #print("Press ESC key to exit")
 #keyboard.wait('esc','space')

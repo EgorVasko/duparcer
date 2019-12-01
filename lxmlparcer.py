@@ -71,13 +71,13 @@ def openbase(file, text):
         return dict_var
 
 
-def dubizzle_parse_lxml(base_url):  # main parse
+def scraping(base_url):  # main parse
     urls = [base_url]  # urls = []    urls.append(base_url)
     session = requests.Session()
     for link in urls:
         request = session.get(link)
         if request.status_code == 200:
-            soup = bs(request.content, "lxml")
+            soup = bs(request.content, 'lxml') #  lxml
             try:
                 pagination = soup.find_all('a', attrs={"class": "page-links"})
                 last_page = int(pagination[-1].text)
@@ -320,7 +320,7 @@ dictsold = openbase("lxml_data_sold.json", "Sold")
 # ==============================================================    parsing started
 start = time.time()
 for car in cars:
-    dubizzle_parse_lxml(car)
+    scraping(car)
 finish = time.time()
 result = round(finish - start, 2)
 

@@ -43,11 +43,11 @@ cars = [infi, x3, bmw3, bmw1, a4, a5, a6, is1, is2, is3, z350, bmw5, clk, z3, z4
 # cars = [test]
 
 parsed = []
-parsed1 = []
+#parsed1 = []
 carslinks = []
 dictold = []
 dictred = []
-
+dictsold = []
 dict_new = []
 
 dict_nochanges = []
@@ -78,7 +78,7 @@ def dubizzle_parse_lxml(base_url):  # main parse
             try:
                 pagination = soup.find_all('a', attrs={"class" : "page-links"} )
                 last_page = int(pagination[-1].text)
-                print("last page number is: " + str(last_page))
+                #wprint("last page number is: " + str(last_page))
                 for i in range(1,last_page):
                     url = str(base_url) + "&page=" + str(i+1)
                     if url not in urls:
@@ -165,12 +165,18 @@ def dubizzle_parse_lxml(base_url):  # main parse
 def dump_data():
     out_new = dict_nochanges + dict_new
     out_disc = dict_disc + dict_disc_again + dict_red_nochanges
+    out_sold = dictold + dictred + dictsold
     if dictold != out_new:
         with open("lxml_data.json", "w+") as write_file:
             json.dump(out_new, write_file)
     if dictred != out_disc:
         with open("lxml_data_disc.json", "w+") as write_disc_file:
             json.dump(out_disc, write_disc_file)
+    # test of sold
+    if dictsold != out_sold:
+        with open("lxml_data_sold.json", "w+") as write_old_file:
+            json.dump(out_sold, write_old_file)
+    # test of sold
 
 
 def OSIS():  # define path to Desktop folder
@@ -254,7 +260,22 @@ def load_to_html():
                        i['title_test'] + '</a>' + "<br />"
                 out_file.write(line)
                 counter += 1
-
+        # test of sold
+        out_sold = dictold + dictred + dictsold
+        if not out_sold:
+            line = ""
+        else:
+            line = "<center><h2>  Sold Cars </center></h2>"
+            out_file.write(line)
+            for i in out_sold:
+                line = str(counter) + " <b>Ad posted:</b> " + i['ad_posted'] + " <b>Model is:</b> " + i['brand'] + " " + i[
+                    'model'] + " <b>Price is:</b> " + i['price'] + \
+                       " <b>Year is:</b> " + i['year'] + " <b>Mileage is:</b> " + i[
+                           'mileage'] + ' <b>Link is :</b> <a href="' + i['href'] + '">' + \
+                       i['title_test'] + '</a>' + "<br />"
+                out_file.write(line)
+                counter += 1
+        # test of sold
 
 def exitmessage():
     if (len(dict_new)) > 0:
@@ -281,10 +302,20 @@ except:
 try:
     with open("lxml_data_disc.json", "r") as disc_file:  # encoding='utf-8'
         dictred = json.load(disc_file)
-    print("Old discounted results are avaliable..." + str(len(dictred)) + " cars")
+    print("Old discounted results are avaliable: " + str(len(dictred)) + " cars")
 except:
     dictred = []
     print("No old discounted results")
+
+# test of sold
+try:
+    with open("lxml_data_sold.json", "r") as sold_file:  # encoding='utf-8'
+        dictsold = json.load(sold_file)
+    print("Sold results are avaliable: " + str(len(dictsold)) + " cars")
+except:
+    dictsold = []
+    print("No sold results")
+# test of sold
 
 # ==============================================================    parsing started
 start = time.time()
@@ -331,6 +362,7 @@ for i in range(len(parsed),0,-1):
                 break
 
 dict_new = parsed
+
 
 # =========================
 

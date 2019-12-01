@@ -165,6 +165,32 @@ def dubizzle_parse_lxml(base_url):  # main parse
             continue
 
 
+def osis():  # define path to Desktop folder
+    if platform.system() == "Windows":
+        return "C:\\Users\\" + getpass.getuser() + '\Desktop\\'  # try os.path.expanduser('~')
+    elif platform.system() == "Linux":
+        return os.path.expanduser('~') + "/Desktop/"
+    else:
+        return ''
+
+
+def combine(main, dict0, dict1, dict2):
+    for i in range(len(main), 0, -1):
+        for z in range(len(dict0), 0, -1):
+            if main[i-1].get('href') == dict0[z - 1].get('href'):
+                if main[i-1].get('price') < dict0[z - 1].get('price'):
+                    main[i-1]['oldprice'] = dict0[z - 1].get('price')  # adding old price
+                    dict1.append(main[i-1])
+                    main.pop(i-1)
+                    dict0.pop(z - 1)
+                    break
+                if main[i-1].get('price') >= dict0[z - 1].get('price'):
+                    dict2.append(main[i-1])
+                    main.pop(i-1)
+                    dict0.pop(z - 1)
+                    break
+
+
 def dump_data():
     out_new = dict_nochanges + dict_new
     out_disc = dict_disc + dict_disc_again + dict_red_nochanges
@@ -180,15 +206,6 @@ def dump_data():
         with open("lxml_data_sold.json", "w+") as write_old_file:
             json.dump(out_sold, write_old_file)
     # test of sold
-
-
-def osis():  # define path to Desktop folder
-    if platform.system() == "Windows":
-        return "C:\\Users\\" + getpass.getuser() + '\Desktop\\'  # try os.path.expanduser('~')
-    elif platform.system() == "Linux":
-        return os.path.expanduser('~') + "/Desktop/"
-    else:
-        return ''
 
 
 def sort_by_parametr(list_to_sort, parametr):
@@ -302,8 +319,8 @@ dictsold = openbase("lxml_data_sold.json", "Sold")
 
 # ==============================================================    parsing started
 start = time.time()
-for i in cars:
-    dubizzle_parse_lxml(i)
+for car in cars:
+    dubizzle_parse_lxml(car)
 finish = time.time()
 result = round(finish - start, 2)
 
@@ -313,7 +330,7 @@ path = osis()
 # =========================================== comparison with old data
 
 
-for i in range(len(parsed), 0, -1):
+'''for i in range(len(parsed), 0, -1):
     for z in range(len(dictred), 0, -1):
         if parsed[i-1].get('href') == dictred[z-1].get('href'):
             if parsed[i-1].get('price') < dictred[z-1].get('price'):
@@ -328,7 +345,6 @@ for i in range(len(parsed), 0, -1):
                 dictred.pop(z-1)
                 break
 
-# ===============================================================
 for i in range(len(parsed), 0, -1):
     for z in range(len(dictold), 0, -1):
         if parsed[i-1].get('href') == dictold[z-1].get('href'):
@@ -342,20 +358,24 @@ for i in range(len(parsed), 0, -1):
                 dict_nochanges.append(parsed[i-1])
                 parsed.pop(i-1)
                 dictold.pop(z-1)
-                break
+                break'''
+# new def combine
+
+
+combine(parsed, dictred, dict_disc_again, dict_red_nochanges)
+combine(parsed, dictold, dict_disc, dict_nochanges)
+# new def combine
 
 dict_new = parsed
 
-
 exitmessage()
 
+dump_data()
 
-dump_data()  # dumping to base
+for dict_ in dicttosort:
+    sort_by_parametr(dict_, sort)
 
-for i in dicttosort:
-    sort_by_parametr(i, sort)
-
-load_to_html()  # html
+load_to_html()
 
 # print("Press ESC key to exit")
 # keyboard.wait('esc','space')

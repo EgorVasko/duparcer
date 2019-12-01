@@ -9,14 +9,22 @@ p {
     color: red;
 }
 
-table, td {
+table{
     border: 1px solid black;
     text-align: center;
     border-collapse: collapse;
+    width: 90%;
+    margin: auto;
 }
 
-th {
+th  {
     background-color: #B3FFBF;
+    border: 1px solid black;
+    text-align: center;
+}
+
+td  {
+
     border: 1px solid black;
     text-align: center;
 }

@@ -238,31 +238,30 @@ def load_to_html():
             out_file.write(line)
             # ==========================table test
             line = """
-            <center><table style="width:80%">
-      <tr>
-    <th>#</th>
-    <th>Posted</th>
-    <th>Model</th>
-    <th>Price</th>
-    <th>Year</th>
-    <th>Mileage</th>
-    <th>Link</th>
-      </tr>
-      </table></center>
+            <table>
+                <tr>
+                    <th>#</th>
+                    <th>Posted</th>
+                    <th>Model</th>
+                    <th>Price</th>
+                    <th>Year</th>
+                    <th>Mileage</th>
+                    <th>Link</th>
+                </tr>
             """
             out_file.write(line)
             # =============== table test
             for i in dict_new:
                 line = """
-                <tr>
-                  <td width="5%"><center>""" + str(counter) + """</center></td>
-                  <center><td width="10%">""" + i['ad_posted'] + """</td></center>
-                  <center><td class="textfield" width="20%">""" + i['brand'] + " " + i['model'] + """</td></center>
-                  <center><td width="10%">""" + i['price'] + """</td></center>
-                  <center><td width="7%">""" + i['year'] + """</td></center>
-                  <center><td width="10%">""" + i['mileage'] + """</td></center>
-                  </center><td class="textfield" width="38%"><a href='""" + i['href'] + """'>""" + i['title_test'] + """</a><br/></td></center>
-                  </tr>
+                    <tr>
+                    <td width="5%">""" + str(counter) + """</td>
+                        <td width="10%">""" + i['ad_posted'] + """</td>
+                        <td class="textfield" width="20%">""" + i['brand'] + " " + i['model'] + """</td>
+                        <td width="10%">""" + i['price'] + """</td>
+                        <td width="7%">""" + i['year'] + """</td>
+                        <td width="10%">""" + i['mileage'] + """</td>
+                        <td class="textfield" width="38%"><a href='""" + i['href'] + """'>""" + i['title_test'] + """</a><br/></td>
+                    </tr>
 
                 """
                 out_file.write(line)
@@ -276,7 +275,7 @@ def load_to_html():
                 """
                 counter += 1
             line = """
-                      </table></center>
+                      </table>
                         """
             out_file.write(line)
         if not dict_disc_again:
@@ -284,29 +283,96 @@ def load_to_html():
         else:
             line = "<center><h2>  Price reduced AGAIN! </center></h2>"
             out_file.write(line)
+            # ==========================table test
+            line = """
+                <table>
+                    <tr>
+                        <th>#</th>
+                        <th>Posted</th>
+                        <th>Model</th>
+                        <th>Price</th>
+                        <th>Old price</th>
+                        <th>Year</th>
+                        <th>Mileage</th>
+                        <th>Link</th>
+                    </tr>
+            """
+            out_file.write(line)
+            # =============== table test
             for i in dict_disc_again:
-                line = str(counter) + " <b>Ad posted:</b> " + i['ad_posted'] + " <b>Model is:</b> " + i['brand'] + " " + \
+                '''line = str(counter) + " <b>Ad posted:</b> " + i['ad_posted'] + " <b>Model is:</b> " + i['brand'] + " " + \
                        i[
                            'model'] + " <b>Price is:</b> " + i['price'] + \
                        " Old price is: " + i['oldprice'] + " <b>Year is:</b> " + i['year'] + " <b>Mileage is:</b> " + i[
                            'mileage'] + \
-                       ' <b>Link is :</b> <a href="' + i['href'] + '">' + i['title_test'] + '</a>' + "<br />"
+                       ' <b>Link is :</b> <a href="' + i['href'] + '">' + i['title_test'] + '</a>' + "<br />"'''
+                line = """
+                    <tr>
+                        <td width="4%"><center>""" + str(counter) + """</td>
+                        <td width="9%">""" + i['ad_posted'] + """</td>
+                        <td class="textfield" width="19%">""" + i['brand'] + " " + i['model'] + """</td>
+                        <td width="9%">""" + i['price'] + """</td>
+                        <td width="9%">""" + i['oldprice'] + """</td>
+                        <td width="6%">""" + i['year'] + """</td>
+                        <td width="9%">""" + i['mileage'] + """</td>
+                        <td class="textfield" width="37%"><a href='""" + i['href'] + """'>""" + i['title_test'] + """</a><br/></td>
+                    </tr>
+
+                """
                 out_file.write(line)
                 counter += 1
+            line = """
+                      </table>
+                        """
+            out_file.write(line)
         if not dict_disc:
             pass  # line = ""
         else:
             line = "<center><h2>  Price reduced </center></h2> "
             out_file.write(line)
+                        # ==========================table test
+            line = """
+            <table>
+                <tr>
+                    <th>#</th>
+                    <th>Posted</th>
+                    <th>Model</th>
+                    <th>Price</th>
+                    <th>Old price</th>
+                    <th>Year</th>
+                    <th>Mileage</th>
+                    <th>Link</th>
+                </tr>
+            """
+            out_file.write(line)
+            # =============== table test
             for i in dict_disc:
-                line = str(counter) + " <b>Ad posted:</b> " + i['ad_posted'] + " <b>Model is:</b> " + i['brand'] + " " + \
-                       i[
-                           'model'] + " <b>Price is:</b> " + i['price'] + \
-                       " Old price is: " + i['oldprice'] + " <b>Year is:</b> " + i['year'] + " <b>Mileage is:</b> " + i[
-                           'mileage'] + \
-                       ' <b>Link is :</b> <a href="' + i['href'] + '">' + i['title_test'] + '</a>' + "<br />"
+                '''line = str(counter) + " <b>Ad posted:</b> " + i['ad_posted'] + " <b>Model is:</b> " + i['brand'] + " " + \
+                           i[
+                               'model'] + " <b>Price is:</b> " + i['price'] + \
+                           " Old price is: " + i['oldprice'] + " <b>Year is:</b> " + i['year'] + " <b>Mileage is:</b> " + i[
+                               'mileage'] + \
+                           ' <b>Link is :</b> <a href="' + i['href'] + '">' + i['title_test'] + '</a>' + "<br />"
+                           '''
+                line = """
+                    <tr>
+                        <td width="4%"><center>""" + str(counter) + """</td>
+                        <td width="9%">""" + i['ad_posted'] + """</td>
+                        <td class="textfield" width="19%">""" + i['brand'] + " " + i['model'] + """</td>
+                        <td width="9%">""" + i['price'] + """</td>
+                        <td width="9%">""" + i['oldprice'] + """</td>
+                        <td width="6%">""" + i['year'] + """</td>
+                        <td width="9%">""" + i['mileage'] + """</td>
+                        <td class="textfield" width="37%"><a href='""" + i['href'] + """'>""" + i['title_test'] + """</a><br/></td>
+                    </tr>
+
+                """
                 out_file.write(line)
                 counter += 1
+            line = """
+                      </table>
+                        """
+            out_file.write(line)
         # ======================================================== dict_nochanges
         if not dict_nochanges:
             pass  # line = ""
@@ -315,16 +381,16 @@ def load_to_html():
             out_file.write(line)
             # ==========================table test
             line = """
-            <center><table style="width:80%">
-      <tr>
-    <th>#</th>
-    <th>Posted</th>
-    <th>Model</th>
-    <th>Price</th>
-    <th>Year</th>
-    <th>Mileage</th>
-    <th>Link</th>
-      </tr>
+            <table>
+                <tr>
+                    <th>#</th>
+                    <th>Posted</th>
+                    <th>Model</th>
+                    <th>Price</th>
+                    <th>Year</th>
+                    <th>Mileage</th>
+                    <th>Link</th>
+                </tr>
             """
             out_file.write(line)
             # =============== table test
@@ -335,38 +401,37 @@ def load_to_html():
                            'mileage'] + ' <b>Link is :</b> <a href="' + i['href'] + '">' + \
                     i['title_test'] + '</a>' + "<br />"'''
                 line = """
-                <tr>
-                  <td width="5%">""" + str(counter) + """</td>
-                  <td width="10%">""" + i['ad_posted'] + """</td>
-                  <td class="textfield" width="20%">""" + i['brand'] + " " + i['model'] + """</td>
-                  <td width="10%">""" + i['price'] + """</td>
-                  <td width="7%">""" + i['year'] + """</td>
-                  <td width="10%">""" + i['mileage'] + """</td>
-                  <td class="textfield" width="38%"><a href='""" + i['href'] + """'>""" + i['title_test'] + """</a><br/></td>
-                  </tr>
-
+                    <tr>
+                        <td width="5%">""" + str(counter) + """</td>
+                        <td width="10%">""" + i['ad_posted'] + """</td>
+                        <td class="textfield" width="20%">""" + i['brand'] + " " + i['model'] + """</td>
+                        <td width="10%">""" + i['price'] + """</td>
+                        <td width="7%">""" + i['year'] + """</td>
+                        <td width="10%">""" + i['mileage'] + """</td>
+                        <td class="textfield" width="38%"><a href='""" + i['href'] + """'>""" + i['title_test'] + """</a><br/></td>
+                    </tr>
                 """
                 out_file.write(line)
                 counter += 1
-        line = """
-              </table></center>
-                """
-        out_file.write(line)
+            line = """
+                  </table>
+                    """
+            out_file.write(line)
         # ========================================================= dict_red_nochanges
         if not dict_red_nochanges:
             pass  # line = ""
         else:
             line = """
-            <center><table style="width:80%">
-      <tr>
-    <th>#</th>
-    <th>Posted</th>
-    <th>Model</th>
-    <th>Price</th>
-    <th>Year</th>
-    <th>Mileage</th>
-    <th>Link</th>
-      </tr>
+            <table>
+            <tr>
+                <th>#</th>
+                <th>Posted</th>
+                <th>Model</th>
+                <th>Price</th>
+                <th>Year</th>
+                <th>Mileage</th>
+                <th>Link</th>
+            </tr>
             """
             out_file.write(line)
             for i in dict_red_nochanges:
@@ -377,24 +442,22 @@ def load_to_html():
                        i['title_test'] + '</a>' + "<br />"'''
 
                 line = """
-                <tr>
-                  <td width="5%">""" + str(counter) + """</td>
-                  <td width="10%">""" + i['ad_posted'] + """</td>
-                  <td class="textfield" width="20%">""" + i['brand'] + " " + i['model'] + """</td>
-                  <td width="10%">""" + i['price'] + """</td>
-                  <td width="7%">""" + i['year'] + """</td>
-                  <td width="10%">""" + i['mileage'] + """</td>
-                  <td class="textfield" width="38%"><a href='""" + i['href'] + """'>""" + i['title_test'] + """</a><br/></td>
-                  </tr>
-
+                    <tr>
+                        <td width="5%">""" + str(counter) + """</td>
+                        <td width="10%">""" + i['ad_posted'] + """</td>
+                        <td class="textfield" width="20%">""" + i['brand'] + " " + i['model'] + """</td>
+                        <td width="10%">""" + i['price'] + """</td>
+                        <td width="7%">""" + i['year'] + """</td>
+                        <td width="10%">""" + i['mileage'] + """</td>
+                        <td class="textfield" width="38%"><a href='""" + i['href'] + """'>""" + i['title_test'] + """</a><br/></td>
+                    </tr>
                 """
-
                 out_file.write(line)
                 counter += 1
-                line = """
-                    </table></center>
-                    """
-        out_file.write(line)
+            line = """
+                </table>
+                """
+            out_file.write(line)
         # ============================================================ dict sold
         out_sold = dictold + dictred + dictsold
         if not out_sold:
@@ -405,19 +468,18 @@ def load_to_html():
             out_file.write(line)
 
             line = """
-            <center><table style="width:80%">
-      <tr>
-    <th>#</th>
-    <th>Posted</th>
-    <th>Model</th>
-    <th>Price</th>
-    <th>Year</th>
-    <th>Mileage</th>
-    <th>Link</th>
-      </tr>
+            <table>
+                <tr>
+                    <th>#</th>
+                    <th>Posted</th>
+                    <th>Model</th>
+                    <th>Price</th>
+                    <th>Year</th>
+                    <th>Mileage</th>
+                    <th>Link</th>
+                </tr>
             """
             out_file.write(line)
-
             for i in out_sold:
                 '''
                 line = str(counter) + " <b>Ad posted:</b> " + i['ad_posted'] + " <b>Model is:</b> " + i['brand'] + " " + i[
@@ -426,19 +488,23 @@ def load_to_html():
                            'mileage'] + ' <b>Link is :</b> <a href="' + i['href'] + '">' + \
                        i['title_test'] + '</a>' + "<br />"'''
                 line = """
-                <tr>
-                  <td width="5%">""" + str(counter) + """</td>
-                  <td width="10%">""" + i['ad_posted'] + """</td>
-                  <td class="textfield" width="20%">""" + i['brand'] + " " + i['model'] + """</td>
-                  <td width="10%">""" + i['price'] + """</td>
-                  <td width="7%">""" + i['year'] + """</td>
-                  <td width="10%">""" + i['mileage'] + """</td>
-                  <td class="textfield" width="38%"><a href='""" + i['href'] + """'>""" + i['title_test'] + """</a><br/></td>
-                  </tr>
+                    <tr>
+                        <td width="5%">""" + str(counter) + """</td>
+                        <td width="10%">""" + i['ad_posted'] + """</td>
+                        <td class="textfield" width="20%">""" + i['brand'] + " " + i['model'] + """</td>
+                        <td width="10%">""" + i['price'] + """</td>
+                        <td width="7%">""" + i['year'] + """</td>
+                        <td width="10%">""" + i['mileage'] + """</td>
+                        <td class="textfield" width="38%"><a href='""" + i['href'] + """'>""" + i['title_test'] + """</a><br/></td>
+                    </tr>
 
                 """
                 out_file.write(line)
                 counter += 1
+            line = """
+                </table>
+                """
+            out_file.write(line)
         # test of sold
         line = """ </body>
                     </html>"""

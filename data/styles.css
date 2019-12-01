@@ -1,0 +1,26 @@
+body {
+    background-color: white;
+}
+h2 {
+    color: black;
+}
+
+p {
+    color: red;
+}
+
+table, td {
+    border: 1px solid black;
+    text-align: center;
+    border-collapse: collapse;
+}
+
+th {
+    background-color: #B3FFBF;
+    border: 1px solid black;
+    text-align: center;
+}
+
+.textfield {
+    text-align: left;
+}

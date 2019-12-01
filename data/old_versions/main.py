@@ -1,8 +1,7 @@
 
 
 from urllib import request
-from parcerfunc import *
-import os
+from data.old_versions.parcerfunc import *
 import json
 import re
 import time

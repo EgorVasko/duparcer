@@ -56,6 +56,7 @@ dict_disc_again = []
 dicttosort = [dict_new, dict_nochanges, dict_disc, dict_disc_again, dict_red_nochanges]
 sort = 'ad_posted'
 
+
 # =============================== functions
 
 
@@ -77,13 +78,13 @@ def scraping(base_url):  # main parse
     for link in urls:
         request = session.get(link)
         if request.status_code == 200:
-            soup = bs(request.content, 'lxml') #  lxml
+            soup = bs(request.content, 'lxml')  # lxml
             try:
                 pagination = soup.find_all('a', attrs={"class": "page-links"})
                 last_page = int(pagination[-1].text)
                 # print("last page number is: " + str(last_page))
                 for page in range(1, last_page):
-                    url = str(base_url) + "&page=" + str(page+1)
+                    url = str(base_url) + "&page=" + str(page + 1)
                     if url not in urls:
                         urls.append(url)
             except IndexError:
@@ -177,16 +178,16 @@ def osis():  # define path to Desktop folder
 def combine(main, dict0, dict1, dict2):
     for i in range(len(main), 0, -1):
         for z in range(len(dict0), 0, -1):
-            if main[i-1].get('href') == dict0[z - 1].get('href'):
-                if main[i-1].get('price') < dict0[z - 1].get('price'):
-                    main[i-1]['oldprice'] = dict0[z - 1].get('price')  # adding old price
-                    dict1.append(main[i-1])
-                    main.pop(i-1)
+            if main[i - 1].get('href') == dict0[z - 1].get('href'):
+                if main[i - 1].get('price') < dict0[z - 1].get('price'):
+                    main[i - 1]['oldprice'] = dict0[z - 1].get('price')  # adding old price
+                    dict1.append(main[i - 1])
+                    main.pop(i - 1)
                     dict0.pop(z - 1)
                     break
-                if main[i-1].get('price') >= dict0[z - 1].get('price'):
-                    dict2.append(main[i-1])
-                    main.pop(i-1)
+                if main[i - 1].get('price') >= dict0[z - 1].get('price'):
+                    dict2.append(main[i - 1])
+                    main.pop(i - 1)
                     dict0.pop(z - 1)
                     break
 
@@ -217,29 +218,76 @@ def sort_by_parametr(list_to_sort, parametr):
 
 def load_to_html():
     counter = 1
-    with open(path + 'output_lxml.html', 'w+') as out_file:
+    with open('output_lxml.html', 'w+') as out_file:  # (path + 'output_lxml.html', 'w+')
+        line = """  <!DOCTYPE html>
+                <html lang="en">
+                <head>
+                <meta charset="UTF-8">
+                <link rel="stylesheet" href="data/styles.css">
+                <title>Dubizzle scraper by 2rbo</title>
+                </head>
+                <body>
+                    """
+        out_file.write(line)
+
         if not dict_new:
             line = "<center><h2> No new cars " + time_of_parse + "</center></h2>"
             out_file.write(line)
         if dict_new:
             line = "<center><h2> New cars " + time_of_parse + "</center></h2>"
             out_file.write(line)
+            # ==========================table test
+            line = """
+            <center><table style="width:80%">
+      <tr>
+    <th>#</th>
+    <th>Posted</th>
+    <th>Model</th>
+    <th>Price</th>
+    <th>Year</th>
+    <th>Mileage</th>
+    <th>Link</th>
+      </tr>
+      </table></center>
+            """
+            out_file.write(line)
+            # =============== table test
             for i in dict_new:
+                line = """
+                <tr>
+                  <td width="5%"><center>""" + str(counter) + """</center></td>
+                  <center><td width="10%">""" + i['ad_posted'] + """</td></center>
+                  <center><td class="textfield" width="20%">""" + i['brand'] + " " + i['model'] + """</td></center>
+                  <center><td width="10%">""" + i['price'] + """</td></center>
+                  <center><td width="7%">""" + i['year'] + """</td></center>
+                  <center><td width="10%">""" + i['mileage'] + """</td></center>
+                  </center><td class="textfield" width="38%"><a href='""" + i['href'] + """'>""" + i['title_test'] + """</a><br/></td></center>
+                  </tr>
+
+                """
+                out_file.write(line)
+                """
                 line = str(counter) + " <b>Ad posted:</b> " + i['ad_posted'] + " <b>Model is:</b> " + i['brand'] + " " + i[
                     'model'] + " <b>Price is:</b> " + i['price'] + \
                        " <b>Year is:</b> " + i['year'] + " <b>Mileage is:</b> " + i[
                            'mileage'] + ' <b>Link is :</b> <a href="' + i['href'] + '">' + \
                        i['title_test'] + '</a>' + "<br />"
                 out_file.write(line)
+                """
                 counter += 1
+            line = """
+                      </table></center>
+                        """
+            out_file.write(line)
         if not dict_disc_again:
             pass  # line = ""
         else:
             line = "<center><h2>  Price reduced AGAIN! </center></h2>"
             out_file.write(line)
             for i in dict_disc_again:
-                line = str(counter) + " <b>Ad posted:</b> " + i['ad_posted'] + " <b>Model is:</b> " + i['brand'] + " " + i[
-                    'model'] + " <b>Price is:</b> " + i['price'] + \
+                line = str(counter) + " <b>Ad posted:</b> " + i['ad_posted'] + " <b>Model is:</b> " + i['brand'] + " " + \
+                       i[
+                           'model'] + " <b>Price is:</b> " + i['price'] + \
                        " Old price is: " + i['oldprice'] + " <b>Year is:</b> " + i['year'] + " <b>Mileage is:</b> " + i[
                            'mileage'] + \
                        ' <b>Link is :</b> <a href="' + i['href'] + '">' + i['title_test'] + '</a>' + "<br />"
@@ -251,38 +299,103 @@ def load_to_html():
             line = "<center><h2>  Price reduced </center></h2> "
             out_file.write(line)
             for i in dict_disc:
-                line = str(counter) + " <b>Ad posted:</b> " + i['ad_posted'] + " <b>Model is:</b> " + i['brand'] + " " + i[
-                    'model'] + " <b>Price is:</b> " + i['price'] + \
+                line = str(counter) + " <b>Ad posted:</b> " + i['ad_posted'] + " <b>Model is:</b> " + i['brand'] + " " + \
+                       i[
+                           'model'] + " <b>Price is:</b> " + i['price'] + \
                        " Old price is: " + i['oldprice'] + " <b>Year is:</b> " + i['year'] + " <b>Mileage is:</b> " + i[
                            'mileage'] + \
                        ' <b>Link is :</b> <a href="' + i['href'] + '">' + i['title_test'] + '</a>' + "<br />"
                 out_file.write(line)
                 counter += 1
+        # ======================================================== dict_nochanges
         if not dict_nochanges:
             pass  # line = ""
         else:
             line = "<center><h2>  Old Cars </center></h2>"
             out_file.write(line)
+            # ==========================table test
+            line = """
+            <center><table style="width:80%">
+      <tr>
+    <th>#</th>
+    <th>Posted</th>
+    <th>Model</th>
+    <th>Price</th>
+    <th>Year</th>
+    <th>Mileage</th>
+    <th>Link</th>
+      </tr>
+            """
+            out_file.write(line)
+            # =============== table test
             for i in dict_nochanges:
-                line = str(counter) + " <b>Ad posted:</b> " + i['ad_posted'] + " <b>Model is:</b> " + i['brand'] + " " + i[
+                '''line = str(counter) + " <b>Ad posted:</b> " + i['ad_posted'] + " <b>Model is:</b> " + i['brand'] + " " + i[
                     'model'] + " <b>Price is:</b> " + i['price'] + \
                     " <b>Year is:</b> " + i['year'] + " <b>Mileage is:</b> " + i[
                            'mileage'] + ' <b>Link is :</b> <a href="' + i['href'] + '">' + \
-                    i['title_test'] + '</a>' + "<br />"
+                    i['title_test'] + '</a>' + "<br />"'''
+                line = """
+                <tr>
+                  <td width="5%">""" + str(counter) + """</td>
+                  <td width="10%">""" + i['ad_posted'] + """</td>
+                  <td class="textfield" width="20%">""" + i['brand'] + " " + i['model'] + """</td>
+                  <td width="10%">""" + i['price'] + """</td>
+                  <td width="7%">""" + i['year'] + """</td>
+                  <td width="10%">""" + i['mileage'] + """</td>
+                  <td class="textfield" width="38%"><a href='""" + i['href'] + """'>""" + i['title_test'] + """</a><br/></td>
+                  </tr>
+
+                """
                 out_file.write(line)
                 counter += 1
+        line = """
+              </table></center>
+                """
+        out_file.write(line)
+        # ========================================================= dict_red_nochanges
         if not dict_red_nochanges:
             pass  # line = ""
         else:
+            line = """
+            <center><table style="width:80%">
+      <tr>
+    <th>#</th>
+    <th>Posted</th>
+    <th>Model</th>
+    <th>Price</th>
+    <th>Year</th>
+    <th>Mileage</th>
+    <th>Link</th>
+      </tr>
+            """
+            out_file.write(line)
             for i in dict_red_nochanges:
-                line = str(counter) + " <b>Ad posted:</b> " + i['ad_posted'] + " <b>Model is:</b> " + i['brand'] + " " + i[
+                '''line = str(counter) + " <b>Ad posted:</b> " + i['ad_posted'] + " <b>Model is:</b> " + i['brand'] + " " + i[
                     'model'] + " <b>Price is:</b> " + i['price'] + \
                        " <b>Year is:</b> " + i['year'] + " <b>Mileage is:</b> " + i[
                            'mileage'] + ' <b>Link is :</b> <a href="' + i['href'] + '">' + \
-                       i['title_test'] + '</a>' + "<br />"
+                       i['title_test'] + '</a>' + "<br />"'''
+
+                line = """
+                <tr>
+                  <td width="5%">""" + str(counter) + """</td>
+                  <td width="10%">""" + i['ad_posted'] + """</td>
+                  <td class="textfield" width="20%">""" + i['brand'] + " " + i['model'] + """</td>
+                  <td width="10%">""" + i['price'] + """</td>
+                  <td width="7%">""" + i['year'] + """</td>
+                  <td width="10%">""" + i['mileage'] + """</td>
+                  <td class="textfield" width="38%"><a href='""" + i['href'] + """'>""" + i['title_test'] + """</a><br/></td>
+                  </tr>
+
+                """
+
                 out_file.write(line)
                 counter += 1
-        # test of sold
+                line = """
+                    </table></center>
+                    """
+        out_file.write(line)
+        # ============================================================ dict sold
         out_sold = dictold + dictred + dictsold
         if not out_sold:
             # line = ""
@@ -290,15 +403,46 @@ def load_to_html():
         else:
             line = "<center><h2>  Sold Cars </center></h2>"
             out_file.write(line)
+
+            line = """
+            <center><table style="width:80%">
+      <tr>
+    <th>#</th>
+    <th>Posted</th>
+    <th>Model</th>
+    <th>Price</th>
+    <th>Year</th>
+    <th>Mileage</th>
+    <th>Link</th>
+      </tr>
+            """
+            out_file.write(line)
+
             for i in out_sold:
+                '''
                 line = str(counter) + " <b>Ad posted:</b> " + i['ad_posted'] + " <b>Model is:</b> " + i['brand'] + " " + i[
                     'model'] + " <b>Price is:</b> " + i['price'] + \
                        " <b>Year is:</b> " + i['year'] + " <b>Mileage is:</b> " + i[
                            'mileage'] + ' <b>Link is :</b> <a href="' + i['href'] + '">' + \
-                       i['title_test'] + '</a>' + "<br />"
+                       i['title_test'] + '</a>' + "<br />"'''
+                line = """
+                <tr>
+                  <td width="5%">""" + str(counter) + """</td>
+                  <td width="10%">""" + i['ad_posted'] + """</td>
+                  <td class="textfield" width="20%">""" + i['brand'] + " " + i['model'] + """</td>
+                  <td width="10%">""" + i['price'] + """</td>
+                  <td width="7%">""" + i['year'] + """</td>
+                  <td width="10%">""" + i['mileage'] + """</td>
+                  <td class="textfield" width="38%"><a href='""" + i['href'] + """'>""" + i['title_test'] + """</a><br/></td>
+                  </tr>
+
+                """
                 out_file.write(line)
                 counter += 1
         # test of sold
+        line = """ </body>
+                    </html>"""
+        out_file.write(line)
 
 
 def exitmessage():
@@ -311,11 +455,9 @@ def exitmessage():
 # ================================== Execution
 print("Program is running. Estimated completion time is ~30 seconds.\nPlease wait...")
 
-
 dictold = openbase("lxml_data.json", "Old")
 dictred = openbase("lxml_data_disc.json", "Old discounted")
 dictsold = openbase("lxml_data_sold.json", "Sold")
-
 
 # ==============================================================    parsing started
 start = time.time()

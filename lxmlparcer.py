@@ -4,8 +4,8 @@
 # Check price reduced
 # redo output to table`
 
-import keyboard
-import sys
+# import keyboard
+# import sys
 import requests
 from bs4 import BeautifulSoup as bs
 import json
@@ -15,7 +15,6 @@ import os
 import datetime
 import re
 import time
-#import lxml
 from urllib.parse import urlsplit
 
 today = datetime.datetime.today()
@@ -43,11 +42,9 @@ cars = [infi, x3, bmw3, bmw1, a4, a5, a6, is1, is2, is3, z350, bmw5, clk, z3, z4
 # cars = [test]
 
 parsed = []
-#parsed1 = []
-carslinks = []
-dictold = []
+'''dictold = []
 dictred = []
-dictsold = []
+dictsold = []'''
 dict_new = []
 
 dict_nochanges = []
@@ -57,33 +54,39 @@ dict_disc = []
 dict_disc_again = []
 
 dicttosort = [dict_new, dict_nochanges, dict_disc, dict_disc_again, dict_red_nochanges]
-
-
+sort = 'ad_posted'
 
 # =============================== functions
 
 
-def carlink(list_of_cars):  # links to list
-    for car in cars:
-        list_of_cars.append(car)
+def openbase(file, text):
+    dict_var = []
+    try:
+        with open(file, "r") as old_file:  # encoding='utf-8'
+            dict_var = json.load(old_file)
+        print(text + " results are available: " + str(len(dict_var)) + " cars")
+        return dict_var
+    except FileNotFoundError:
+        print("No " + text + " results")
+        return dict_var
 
 
 def dubizzle_parse_lxml(base_url):  # main parse
     urls = [base_url]  # urls = []    urls.append(base_url)
     session = requests.Session()
-    for i in urls:
-        request = session.get(i)
+    for link in urls:
+        request = session.get(link)
         if request.status_code == 200:
             soup = bs(request.content, "lxml")
             try:
-                pagination = soup.find_all('a', attrs={"class" : "page-links"} )
+                pagination = soup.find_all('a', attrs={"class": "page-links"})
                 last_page = int(pagination[-1].text)
-                #wprint("last page number is: " + str(last_page))
-                for i in range(1,last_page):
-                    url = str(base_url) + "&page=" + str(i+1)
+                # print("last page number is: " + str(last_page))
+                for page in range(1, last_page):
+                    url = str(base_url) + "&page=" + str(page+1)
                     if url not in urls:
                         urls.append(url)
-            except:
+            except IndexError:
                 pass
             divs = soup.find_all('div', attrs={"id": "featured-listing-item"})
             divs += soup.find_all('div', attrs={"class": "cf item paid-featured-item featured-motors"})
@@ -108,7 +111,7 @@ def dubizzle_parse_lxml(base_url):  # main parse
                     year = features[year_index + 6: 11]
                     mileage = features[mileage_index + 25: 32]
                     mileage = re.sub(r'\D', '', mileage)
-                except:
+                except AttributeError:
                     features = div.find("ul", attrs={"class": "featured_listing_features"}).text
                     features = features.strip()
                     year_index = features.find('Year:')
@@ -179,13 +182,20 @@ def dump_data():
     # test of sold
 
 
-def OSIS():  # define path to Desktop folder
+def osis():  # define path to Desktop folder
     if platform.system() == "Windows":
-        return ("C:\\Users\\" + getpass.getuser() + "\Desktop\\")  # try os.path.expanduser('~')
+        return "C:\\Users\\" + getpass.getuser() + '\Desktop\\'  # try os.path.expanduser('~')
     elif platform.system() == "Linux":
-        return (os.path.expanduser('~') + "/Desktop/")
+        return os.path.expanduser('~') + "/Desktop/"
     else:
-        return ('')
+        return ''
+
+
+def sort_by_parametr(list_to_sort, parametr):
+    for x in range(len(list_to_sort) - 1, 0, -1):
+        for y in range(x):
+            if list_to_sort[y].get(parametr) < list_to_sort[y + 1].get(parametr):
+                list_to_sort[y], list_to_sort[y + 1] = list_to_sort[y + 1], list_to_sort[y]
 
 
 def load_to_html():
@@ -206,7 +216,7 @@ def load_to_html():
                 out_file.write(line)
                 counter += 1
         if not dict_disc_again:
-            line = ""
+            pass  # line = ""
         else:
             line = "<center><h2>  Price reduced AGAIN! </center></h2>"
             out_file.write(line)
@@ -219,7 +229,7 @@ def load_to_html():
                 out_file.write(line)
                 counter += 1
         if not dict_disc:
-            line = ""
+            pass  # line = ""
         else:
             line = "<center><h2>  Price reduced </center></h2> "
             out_file.write(line)
@@ -232,25 +242,20 @@ def load_to_html():
                 out_file.write(line)
                 counter += 1
         if not dict_nochanges:
-            line = ""
+            pass  # line = ""
         else:
             line = "<center><h2>  Old Cars </center></h2>"
             out_file.write(line)
             for i in dict_nochanges:
-                """
-                line = 'Link is : <a href="' + i['href'] + '">' + i['title_test'] + '</a>' + "&nbsp;&nbsp;&nbsp;&nbsp;Price is: " + \
-                       i['price'] + " Year is: " + i['year'] + " Mileage is: " + i['mileage'] + \
-                       " Model is: " + i['brand'] + " " + i['model'] + " Ad posted: " + i['ad_posted'] +"<br />"
-                """
                 line = str(counter) + " <b>Ad posted:</b> " + i['ad_posted'] + " <b>Model is:</b> " + i['brand'] + " " + i[
                     'model'] + " <b>Price is:</b> " + i['price'] + \
-                       " <b>Year is:</b> " + i['year'] + " <b>Mileage is:</b> " + i[
+                    " <b>Year is:</b> " + i['year'] + " <b>Mileage is:</b> " + i[
                            'mileage'] + ' <b>Link is :</b> <a href="' + i['href'] + '">' + \
-                       i['title_test'] + '</a>' + "<br />"
+                    i['title_test'] + '</a>' + "<br />"
                 out_file.write(line)
                 counter += 1
         if not dict_red_nochanges:
-            line = ""
+            pass  # line = ""
         else:
             for i in dict_red_nochanges:
                 line = str(counter) + " <b>Ad posted:</b> " + i['ad_posted'] + " <b>Model is:</b> " + i['brand'] + " " + i[
@@ -263,7 +268,8 @@ def load_to_html():
         # test of sold
         out_sold = dictold + dictred + dictsold
         if not out_sold:
-            line = ""
+            # line = ""
+            pass  # instead of line = ""
         else:
             line = "<center><h2>  Sold Cars </center></h2>"
             out_file.write(line)
@@ -277,45 +283,22 @@ def load_to_html():
                 counter += 1
         # test of sold
 
+
 def exitmessage():
     if (len(dict_new)) > 0:
         print(len(dict_new), "New cars found")
     else:
         print("No new cars")
 
+
 # ================================== Execution
-
-
-carlink(carslinks)  # compiling list of links
-
 print("Program is running. Estimated completion time is ~30 seconds.\nPlease wait...")
 
-# =========================== open database
-try:
-    with open("lxml_data.json", "r") as old_file:  # encoding='utf-8'
-        dictold = json.load(old_file)
-    print("Old results are avaliable: " + str(len(dictold)) + " cars")
-except:
-    print("No old results")
-    dictold = []
 
-try:
-    with open("lxml_data_disc.json", "r") as disc_file:  # encoding='utf-8'
-        dictred = json.load(disc_file)
-    print("Old discounted results are avaliable: " + str(len(dictred)) + " cars")
-except:
-    dictred = []
-    print("No old discounted results")
+dictold = openbase("lxml_data.json", "Old")
+dictred = openbase("lxml_data_disc.json", "Old discounted")
+dictsold = openbase("lxml_data_sold.json", "Sold")
 
-# test of sold
-try:
-    with open("lxml_data_sold.json", "r") as sold_file:  # encoding='utf-8'
-        dictsold = json.load(sold_file)
-    print("Sold results are avaliable: " + str(len(dictsold)) + " cars")
-except:
-    dictsold = []
-    print("No sold results")
-# test of sold
 
 # ==============================================================    parsing started
 start = time.time()
@@ -324,14 +307,14 @@ for i in cars:
 finish = time.time()
 result = round(finish - start, 2)
 
-print('Parcing completed with lxml method:', result, "seconds\nTotal:", len(parsed), "cars parsed")
+print('Scraping completed with lxml method:', result, "seconds\nTotal:", len(parsed), "cars parsed")
 
-path = OSIS()
+path = osis()
 # =========================================== comparison with old data
 
 
-for i in range(len(parsed),0,-1):
-    for z in range(len(dictred),0,-1):
+for i in range(len(parsed), 0, -1):
+    for z in range(len(dictred), 0, -1):
         if parsed[i-1].get('href') == dictred[z-1].get('href'):
             if parsed[i-1].get('price') < dictred[z-1].get('price'):
                 parsed[i-1]['oldprice'] = dictred[z-1].get('price')  # adding old price
@@ -346,8 +329,8 @@ for i in range(len(parsed),0,-1):
                 break
 
 # ===============================================================
-for i in range(len(parsed),0,-1):
-    for z in range(len(dictold),0,-1):
+for i in range(len(parsed), 0, -1):
+    for z in range(len(dictold), 0, -1):
         if parsed[i-1].get('href') == dictold[z-1].get('href'):
             if parsed[i-1].get('price') < dictold[z-1].get('price'):
                 parsed[i-1]['oldprice'] = dictold[z-1].get('price')
@@ -364,33 +347,15 @@ for i in range(len(parsed),0,-1):
 dict_new = parsed
 
 
-# =========================
-
-
 exitmessage()
 
-
-# ============================== sorting by date
-
-
-def sort_by_parametr(list_to_sort, parametr):
-    for x in range(len(list_to_sort) - 1, 0, -1):
-        for i in range(x):
-            if list_to_sort[i].get(parametr) < list_to_sort[i + 1].get(parametr):
-                list_to_sort[i], list_to_sort[i + 1] = list_to_sort[i + 1], list_to_sort[i]
-
-
-sort = 'ad_posted'
-
-
-# ============================== sorting by date
 
 dump_data()  # dumping to base
 
 for i in dicttosort:
-    sort_by_parametr(i,sort)
+    sort_by_parametr(i, sort)
 
 load_to_html()  # html
 
-#print("Press ESC key to exit")
-#keyboard.wait('esc','space')
+# print("Press ESC key to exit")
+# keyboard.wait('esc','space')

@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 
 # link can be changed from dubai to uae
-# Check price reduced
-# redo output to table`
+#  output to database
 
 # import keyboard
 # import sys
@@ -120,14 +119,12 @@ def scraping(base_url):  # main parse
                     year = features[year_index + 6: 10]
                     mileage = features[mileage_index + 25: 32]
                     mileage = re.sub(r'\D', '', mileage)
-                # add code from sandbox here
                 parse_result = urlsplit(href)
                 query_s = parse_result.path
                 car_data = query_s.split("/")
                 car_data = car_data[3:9]
                 brand = str(car_data[0]).capitalize()
                 model = str(car_data[1]).capitalize()
-                # ad_posted = str(car_data[2]) + "-" + str(car_data[3]) + "-" + str(car_data[4])
                 if len(str(car_data[3])) == 1:
                     month = "0" + str(car_data[3])
                 else:
@@ -138,18 +135,6 @@ def scraping(base_url):  # main parse
                     date = str(car_data[4])
                 ad_posted = str(car_data[2]) + "-" + month + "-" + date
                 title_test = str(car_data[5]).replace("-", " ")
-                # end of sandbox
-                '''if {
-                        'title': title,
-                        'href': href,
-                        'price': price,
-                        'year': year,
-                        'mileage': mileage,
-                        'brand': brand,
-                        'model': model,
-                        'ad_posted': ad_posted,
-                        'title_test': title_test
-                    } not in parsed:'''
                 parsed.append({
                     'title': title,
                     'href': href,
@@ -206,11 +191,9 @@ def dump_data():
     if dictred != out_disc:
         with open("lxml_data_disc.json", "w+") as write_disc_file:
             json.dump(out_disc, write_disc_file)
-    # test of sold
     if dictsold != out_sold:
         with open("lxml_data_sold.json", "w+") as write_old_file:
             json.dump(out_sold, write_old_file)
-    # test of sold
 
 
 def sort_by_parametr(list_to_sort, parametr):
@@ -240,7 +223,6 @@ def load_to_html():
         if dict_new:
             line = "<center><h2> New cars " + time_of_parse + "</center></h2>"
             out_file.write(line)
-            # ==========================table test
             line = """
             <table>
                 <tr>
@@ -254,7 +236,6 @@ def load_to_html():
                 </tr>
             """
             out_file.write(line)
-            # =============== table test
             for i in dict_new:
                 line = """
                     <tr>
@@ -274,12 +255,12 @@ def load_to_html():
                       </table>
                         """
             out_file.write(line)
+
         if not dict_disc_again:
             pass  # line = ""
         else:
             line = "<center><h2>  Price reduced AGAIN! </center></h2>"
             out_file.write(line)
-            # ==========================table test
             line = """
                 <table>
                     <tr>
@@ -294,7 +275,6 @@ def load_to_html():
                     </tr>
             """
             out_file.write(line)
-            # =============== table test
             for i in dict_disc_again:
                 line = """
                     <tr>
@@ -315,12 +295,12 @@ def load_to_html():
                       </table>
                         """
             out_file.write(line)
+
         if not dict_disc:
             pass  # line = ""
         else:
             line = "<center><h2>  Price reduced </center></h2> "
             out_file.write(line)
-#  ==========================table test
             line = """
             <table>
                 <tr>
@@ -335,7 +315,6 @@ def load_to_html():
                 </tr>
             """
             out_file.write(line)
-            # =============== table test
             for i in dict_disc:
                 line = """
                     <tr>
@@ -356,13 +335,12 @@ def load_to_html():
                       </table>
                         """
             out_file.write(line)
-        # ======================================================== dict_nochanges
+
         if not dict_nochanges:
             pass  # line = ""
         else:
             line = "<center><h2>  Old Cars </center></h2>"
             out_file.write(line)
-            # ==========================table test
             line = """
             <table>
                 <tr>
@@ -376,7 +354,6 @@ def load_to_html():
                 </tr>
             """
             out_file.write(line)
-            # =============== table test
             for i in dict_nochanges:
                 line = """
                     <tr>
@@ -395,11 +372,12 @@ def load_to_html():
                   </table>
                     """
             out_file.write(line)
-        # ========================================================= dict_red_nochanges
+
         if not dict_red_nochanges:
             pass  # line = ""
         else:
             line = """
+            <br>
             <table>
             <tr>
                 <th>#</th>
@@ -432,15 +410,13 @@ def load_to_html():
                 </table>
                 """
             out_file.write(line)
-        # ============================================================ dict sold
+
         out_sold = dictold + dictred + dictsold
         if not out_sold:
-            # line = ""
             pass  # instead of line = ""
         else:
             line = "<center><h2>  Sold Cars </center></h2>"
             out_file.write(line)
-
             line = """
             <table>
                 <tr>
@@ -455,12 +431,6 @@ def load_to_html():
             """
             out_file.write(line)
             for i in out_sold:
-                '''
-                line = str(counter) + " <b>Ad posted:</b> " + i['ad_posted'] + " <b>Model is:</b> " + i['brand'] + " " + i[
-                    'model'] + " <b>Price is:</b> " + i['price'] + \
-                       " <b>Year is:</b> " + i['year'] + " <b>Mileage is:</b> " + i[
-                           'mileage'] + ' <b>Link is :</b> <a href="' + i['href'] + '">' + \
-                       i['title_test'] + '</a>' + "<br />"'''
                 line = """
                     <tr>
                         <td width="5%">""" + str(counter) + """</td>
@@ -479,7 +449,6 @@ def load_to_html():
                 </table>
                 """
             out_file.write(line)
-        # test of sold
         line = """ </body>
                     </html>"""
         out_file.write(line)
@@ -502,14 +471,7 @@ dictsold = openbase("lxml_data_sold.json", "Sold")
 start_lxml = time.time()
 
 threads = []
-# ================= timer
 
-finish = time.time()
-result = round(finish - start, 2)
-print('From start:', result, "seconds")
-
-
-# ====================timer
 for car in cars:
     t = threading.Thread(target=scraping, args=(car,))
     t.start()

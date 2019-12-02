@@ -392,7 +392,11 @@ def load_to_html():
             """
             out_file.write(line)
             for i in dict_red_nochanges:
-                line = """
+                #  =================  output in a format => because of no old price only
+                line = """<tr><td width="4%"><center> {} </td><td width="9%"> {} </td><td class="textfield" width="19%"> {} {} </td><td width="9%"> {}</td>
+                <td width="9%"> {} </td><td width="6%"> {} </td><td width="9%"> {} </td><td class="textfield" width="37%"><a href='{}'>{}</a><br/></td>
+                </tr>""".format(str(counter), i['ad_posted'], i['brand'], i['model'], i['price'], i['oldprice'], i['year'], i['mileage'], i['href'], i['title_test'])
+                '''line = """
                     <tr>
                         <td width="4%"><center>""" + str(counter) + """</td>
                         <td width="9%">""" + i['ad_posted'] + """</td>
@@ -403,7 +407,7 @@ def load_to_html():
                         <td width="9%">""" + i['mileage'] + """</td>
                         <td class="textfield" width="37%"><a href='""" + i['href'] + """'>""" + i['title_test'] + """</a><br/></td>
                     </tr>
-                """
+                """'''
                 out_file.write(line)
                 counter += 1
             line = """
@@ -441,8 +445,7 @@ def load_to_html():
                         <td width="10%">""" + i['mileage'] + """</td>
                         <td class="textfield" width="38%"><a href='""" + i['href'] + """'>""" + i['title_test'] + """</a><br/></td>
                     </tr>
-
-                """
+                        """
                 out_file.write(line)
                 counter += 1
             line = """

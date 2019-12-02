@@ -74,7 +74,7 @@ def openbase(file, text):
 def scraping(base_url):  # main parse
     urls = [base_url]  # urls = []    urls.append(base_url)
     session = requests.Session()
-#    start_scraping = time.time()
+    start_scraping = time.time()
     for link in urls:
         request = session.get(link)
         if request.status_code == 200:
@@ -164,9 +164,9 @@ def scraping(base_url):  # main parse
         else:
             print("error")
             continue
-#    finish_scraping = time.time()
-#    result_scraping = round(finish_scraping - start_scraping, 2)
-#    print(base_url, "completed", result_scraping, "total: ", len(parsed))
+    finish_scraping = time.time()
+    result_scraping = round(finish_scraping - start_scraping, 2)
+    print(base_url, "completed", result_scraping, "total: ", len(parsed))
 
 
 def osis():  # define path to Desktop folder
@@ -176,13 +176,6 @@ def osis():  # define path to Desktop folder
         return os.path.expanduser('~') + "/Desktop/"
     else:
         return ''
-
-
-#  combine(parsed, dictred, dict_disc_again*, dict_red_nochanges*)
-#  combine(parsed, dictold, dict_disc*, dict_nochanges)
-#  dictold = openbase("lxml_data.json", "Old")
-#  dictred = openbase("lxml_data_disc.json", "Old discounted")
-#  dictsold = openbase("lxml_data_sold.json", "Sold")
 
 
 def combine(main, dict0, dict1, dict2):
@@ -531,7 +524,7 @@ def exitmessage():
         print("No new cars")
 
 
-# =========================================== Execution ====================================================
+# ============================================= Execution ====================================================
 print("Program is running. Estimated completion time is ~30 seconds.\nPlease wait...")
 
 dictold = openbase("lxml_data.json", "Old")
@@ -541,7 +534,14 @@ dictsold = openbase("lxml_data_sold.json", "Sold")
 start_lxml = time.time()
 
 threads = []
+# ================= timer
 
+finish = time.time()
+result = round(finish - start, 2)
+print('From start:', result, "seconds")
+
+
+# ====================timer
 for car in cars:
     t = threading.Thread(target=scraping, args=(car,))
     t.start()
@@ -562,8 +562,6 @@ combine(parsed, dictold, dict_disc, dict_nochanges)
 
 dict_new = parsed
 
-exitmessage()
-
 dump_data()
 
 for dict_ in dicttosort:
@@ -574,7 +572,8 @@ load_to_html()
 # print("Press ESC key to exit")
 # keyboard.wait('esc','space')
 
-finish = time.time()
-result = round(finish_lxml - start_lxml, 2)
+exitmessage()
 
+finish = time.time()
+result = round(finish - start, 2)
 print('Completed:', result, "seconds")

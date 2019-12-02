@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.6
 
-'''
+
 import urllib.request
 import requests
 import time
@@ -44,45 +44,6 @@ for i in pa:
         continue
     else:
         print(i,"Not avaliable",session.status_code)
-finish = time.time()
-result = round(finish - start, 2)
-print("done in: ", result)
-'''
-
-import requests
-import time
-import asyncio
-from aiohttp import ClientSession
-
-pa = ["https://dubai.dubizzle.com", "https://fujairah.dubizzle.com","https://www.tut.by","http://vidno.by","https://hh.ru","https://www.google.com"]
-
-def hello(href):
-    return requests.get(href)
-
-start = time.time()
-
-#for i in pa:
-#    print(i,hello(i))
-
-finish = time.time()
-result = round(finish - start, 2)
-print("done in: ", result)
-
-
-start = time.time()
-
-
-async def hello(url):
-    async with ClientSession() as session:
-        async with session.get(url) as response:
-            response = await response.read()
-            print(response)
-
-loop = asyncio.get_event_loop()
-
-for i in pa:
-    loop.run_until_complete(hello(i))
-
 finish = time.time()
 result = round(finish - start, 2)
 print("done in: ", result)

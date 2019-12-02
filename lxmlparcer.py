@@ -15,10 +15,12 @@ import os
 import datetime
 import re
 import time
+import threading
 from urllib.parse import urlsplit
 
 today = datetime.datetime.today()
 time_of_parse = today.strftime("%Y-%m-%d %H:%M:%S")
+start = time.time()
 
 infi = 'https://dubai.dubizzle.com/motors/used-cars/infiniti/gseries/?price__gte=&price__lte=25000&year__gte=2009&year__lte=&kilometers__gte=&kilometers__lte=230000'
 x3 = 'https://dubai.dubizzle.com/motors/used-cars/bmw/x3/?price__gte=&price__lte=25000&year__gte=2007&year__lte=&kilometers__gte=&kilometers__lte=230000'
@@ -42,9 +44,6 @@ cars = [infi, x3, bmw3, bmw1, a4, a5, a6, is1, is2, is3, z350, bmw5, clk, z3, z4
 # cars = [test]
 
 parsed = []
-'''dictold = []
-dictred = []
-dictsold = []'''
 dict_new = []
 
 dict_nochanges = []
@@ -53,7 +52,7 @@ dict_red_nochanges = []
 dict_disc = []
 dict_disc_again = []
 
-dicttosort = [dict_new, dict_nochanges, dict_disc, dict_disc_again, dict_red_nochanges]
+dicttosort = [dict_new, dict_nochanges, dict_disc, dict_disc_again, dict_red_nochanges, parsed]
 sort = 'ad_posted'
 
 
@@ -65,7 +64,7 @@ def openbase(file, text):
     try:
         with open(file, "r") as old_file:  # encoding='utf-8'
             dict_var = json.load(old_file)
-        print(text + " results are available: " + str(len(dict_var)) + " cars")
+        print("{} results are available: {} cars".format(text, len(dict_var)))
         return dict_var
     except FileNotFoundError:
         print("No " + text + " results")
@@ -75,6 +74,7 @@ def openbase(file, text):
 def scraping(base_url):  # main parse
     urls = [base_url]  # urls = []    urls.append(base_url)
     session = requests.Session()
+#    start_scraping = time.time()
     for link in urls:
         request = session.get(link)
         if request.status_code == 200:
@@ -164,6 +164,9 @@ def scraping(base_url):  # main parse
         else:
             print("error")
             continue
+#    finish_scraping = time.time()
+#    result_scraping = round(finish_scraping - start_scraping, 2)
+#    print(base_url, "completed", result_scraping, "total: ", len(parsed))
 
 
 def osis():  # define path to Desktop folder
@@ -173,6 +176,13 @@ def osis():  # define path to Desktop folder
         return os.path.expanduser('~') + "/Desktop/"
     else:
         return ''
+
+
+#  combine(parsed, dictred, dict_disc_again*, dict_red_nochanges*)
+#  combine(parsed, dictold, dict_disc*, dict_nochanges)
+#  dictold = openbase("lxml_data.json", "Old")
+#  dictred = openbase("lxml_data_disc.json", "Old discounted")
+#  dictsold = openbase("lxml_data_sold.json", "Sold")
 
 
 def combine(main, dict0, dict1, dict2):
@@ -186,6 +196,7 @@ def combine(main, dict0, dict1, dict2):
                     dict0.pop(z - 1)
                     break
                 if main[i - 1].get('price') >= dict0[z - 1].get('price'):
+                    main[i - 1]['oldprice'] = dict0[z - 1].get('oldprice')
                     dict2.append(main[i - 1])
                     main.pop(i - 1)
                     dict0.pop(z - 1)
@@ -330,7 +341,7 @@ def load_to_html():
         else:
             line = "<center><h2>  Price reduced </center></h2> "
             out_file.write(line)
-                        # ==========================table test
+#  ==========================table test
             line = """
             <table>
                 <tr>
@@ -428,6 +439,7 @@ def load_to_html():
                 <th>Posted</th>
                 <th>Model</th>
                 <th>Price</th>
+                <th>Old price</th>
                 <th>Year</th>
                 <th>Mileage</th>
                 <th>Link</th>
@@ -443,13 +455,14 @@ def load_to_html():
 
                 line = """
                     <tr>
-                        <td width="5%">""" + str(counter) + """</td>
-                        <td width="10%">""" + i['ad_posted'] + """</td>
-                        <td class="textfield" width="20%">""" + i['brand'] + " " + i['model'] + """</td>
-                        <td width="10%">""" + i['price'] + """</td>
-                        <td width="7%">""" + i['year'] + """</td>
-                        <td width="10%">""" + i['mileage'] + """</td>
-                        <td class="textfield" width="38%"><a href='""" + i['href'] + """'>""" + i['title_test'] + """</a><br/></td>
+                        <td width="4%"><center>""" + str(counter) + """</td>
+                        <td width="9%">""" + i['ad_posted'] + """</td>
+                        <td class="textfield" width="19%">""" + i['brand'] + " " + i['model'] + """</td>
+                        <td width="9%">""" + i['price'] + """</td>
+                        <td width="9%">""" + i['oldprice'] + """</td>
+                        <td width="6%">""" + i['year'] + """</td>
+                        <td width="9%">""" + i['mileage'] + """</td>
+                        <td class="textfield" width="37%"><a href='""" + i['href'] + """'>""" + i['title_test'] + """</a><br/></td>
                     </tr>
                 """
                 out_file.write(line)
@@ -518,61 +531,34 @@ def exitmessage():
         print("No new cars")
 
 
-# ================================== Execution
+# =========================================== Execution ====================================================
 print("Program is running. Estimated completion time is ~30 seconds.\nPlease wait...")
 
 dictold = openbase("lxml_data.json", "Old")
 dictred = openbase("lxml_data_disc.json", "Old discounted")
 dictsold = openbase("lxml_data_sold.json", "Sold")
 
-# ==============================================================    parsing started
-start = time.time()
-for car in cars:
-    scraping(car)
-finish = time.time()
-result = round(finish - start, 2)
+start_lxml = time.time()
 
-print('Scraping completed with lxml method:', result, "seconds\nTotal:", len(parsed), "cars parsed")
+threads = []
+
+for car in cars:
+    t = threading.Thread(target=scraping, args=(car,))
+    t.start()
+    threads.append(t)
+
+for car in threads:
+    car.join()
+
+finish_lxml = time.time()
+result_lxml = round(finish_lxml - start_lxml, 2)
+
+print('Scraping completed with lxml method:', result_lxml, "seconds\nTotal:", len(parsed), "cars parsed")
 
 path = osis()
-# =========================================== comparison with old data
-
-
-'''for i in range(len(parsed), 0, -1):
-    for z in range(len(dictred), 0, -1):
-        if parsed[i-1].get('href') == dictred[z-1].get('href'):
-            if parsed[i-1].get('price') < dictred[z-1].get('price'):
-                parsed[i-1]['oldprice'] = dictred[z-1].get('price')  # adding old price
-                dict_disc_again.append(parsed[i-1])
-                parsed.pop(i-1)
-                dictred.pop(z-1)
-                break
-            if parsed[i-1].get('price') >= dictred[z-1].get('price'):
-                dict_red_nochanges.append(parsed[i-1])
-                parsed.pop(i-1)
-                dictred.pop(z-1)
-                break
-
-for i in range(len(parsed), 0, -1):
-    for z in range(len(dictold), 0, -1):
-        if parsed[i-1].get('href') == dictold[z-1].get('href'):
-            if parsed[i-1].get('price') < dictold[z-1].get('price'):
-                parsed[i-1]['oldprice'] = dictold[z-1].get('price')
-                dict_disc.append(parsed[i-1])
-                parsed.pop(i-1)
-                dictold.pop(z-1)
-                break
-            if parsed[i-1].get('price') >= dictold[z-1].get('price'):
-                dict_nochanges.append(parsed[i-1])
-                parsed.pop(i-1)
-                dictold.pop(z-1)
-                break'''
-# new def combine
-
 
 combine(parsed, dictred, dict_disc_again, dict_red_nochanges)
 combine(parsed, dictold, dict_disc, dict_nochanges)
-# new def combine
 
 dict_new = parsed
 
@@ -587,3 +573,8 @@ load_to_html()
 
 # print("Press ESC key to exit")
 # keyboard.wait('esc','space')
+
+finish = time.time()
+result = round(finish_lxml - start_lxml, 2)
+
+print('Completed:', result, "seconds")

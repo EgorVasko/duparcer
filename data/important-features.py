@@ -44,6 +44,17 @@ for i in pa:
     else:
         print("Not avaliable")
 
+# ================================= 2
+start = time.time()
+for i in pa:
+    if urllib.request.urlopen(i).getcode() == 200:
+        print(i,"Checked & avaliable")
+        continue
+    else:
+        print(i,"Not avaliable")
+finish = time.time()
+result = round(finish - start, 2)
+print("done in: ", result)
 
 ===================================
 import csv

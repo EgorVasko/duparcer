@@ -269,14 +269,6 @@ def load_to_html():
 
                 """
                 out_file.write(line)
-                """
-                line = str(counter) + " <b>Ad posted:</b> " + i['ad_posted'] + " <b>Model is:</b> " + i['brand'] + " " + i[
-                    'model'] + " <b>Price is:</b> " + i['price'] + \
-                       " <b>Year is:</b> " + i['year'] + " <b>Mileage is:</b> " + i[
-                           'mileage'] + ' <b>Link is :</b> <a href="' + i['href'] + '">' + \
-                       i['title_test'] + '</a>' + "<br />"
-                out_file.write(line)
-                """
                 counter += 1
             line = """
                       </table>
@@ -304,12 +296,6 @@ def load_to_html():
             out_file.write(line)
             # =============== table test
             for i in dict_disc_again:
-                '''line = str(counter) + " <b>Ad posted:</b> " + i['ad_posted'] + " <b>Model is:</b> " + i['brand'] + " " + \
-                       i[
-                           'model'] + " <b>Price is:</b> " + i['price'] + \
-                       " Old price is: " + i['oldprice'] + " <b>Year is:</b> " + i['year'] + " <b>Mileage is:</b> " + i[
-                           'mileage'] + \
-                       ' <b>Link is :</b> <a href="' + i['href'] + '">' + i['title_test'] + '</a>' + "<br />"'''
                 line = """
                     <tr>
                         <td width="4%"><center>""" + str(counter) + """</td>
@@ -351,13 +337,6 @@ def load_to_html():
             out_file.write(line)
             # =============== table test
             for i in dict_disc:
-                '''line = str(counter) + " <b>Ad posted:</b> " + i['ad_posted'] + " <b>Model is:</b> " + i['brand'] + " " + \
-                           i[
-                               'model'] + " <b>Price is:</b> " + i['price'] + \
-                           " Old price is: " + i['oldprice'] + " <b>Year is:</b> " + i['year'] + " <b>Mileage is:</b> " + i[
-                               'mileage'] + \
-                           ' <b>Link is :</b> <a href="' + i['href'] + '">' + i['title_test'] + '</a>' + "<br />"
-                           '''
                 line = """
                     <tr>
                         <td width="4%"><center>""" + str(counter) + """</td>
@@ -399,11 +378,6 @@ def load_to_html():
             out_file.write(line)
             # =============== table test
             for i in dict_nochanges:
-                '''line = str(counter) + " <b>Ad posted:</b> " + i['ad_posted'] + " <b>Model is:</b> " + i['brand'] + " " + i[
-                    'model'] + " <b>Price is:</b> " + i['price'] + \
-                    " <b>Year is:</b> " + i['year'] + " <b>Mileage is:</b> " + i[
-                           'mileage'] + ' <b>Link is :</b> <a href="' + i['href'] + '">' + \
-                    i['title_test'] + '</a>' + "<br />"'''
                 line = """
                     <tr>
                         <td width="5%">""" + str(counter) + """</td>
@@ -440,12 +414,6 @@ def load_to_html():
             """
             out_file.write(line)
             for i in dict_red_nochanges:
-                '''line = str(counter) + " <b>Ad posted:</b> " + i['ad_posted'] + " <b>Model is:</b> " + i['brand'] + " " + i[
-                    'model'] + " <b>Price is:</b> " + i['price'] + \
-                       " <b>Year is:</b> " + i['year'] + " <b>Mileage is:</b> " + i[
-                           'mileage'] + ' <b>Link is :</b> <a href="' + i['href'] + '">' + \
-                       i['title_test'] + '</a>' + "<br />"'''
-
                 line = """
                     <tr>
                         <td width="4%"><center>""" + str(counter) + """</td>

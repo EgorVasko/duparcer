@@ -457,15 +457,17 @@ def load_to_html():
         out_file.write(line)
 
 
-def exitmessage():
+def exitmessage(tim):
     if (len(dict_new)) > 0:
-        print(len(dict_new), "New cars found")
+        print('Completed:', tim, "seconds\n", len(dict_new), "New cars found")
+        # print("Press ESC key to exit")
+        # keyboard.wait('esc','space')
     else:
-        print("No new cars")
+        print('Completed:', tim, "seconds\nNo new cars")
 
 
 # ============================================= Execution ====================================================
-print("Program is running. Estimated completion time is ~30 seconds.\nPlease wait...")
+print("Program is running. \nPlease wait...")
 
 dictold = openbase("lxml_data.json", "Old")
 dictred = openbase("lxml_data_disc.json", "Old discounted")
@@ -488,7 +490,7 @@ result_lxml = round(finish_lxml - start_lxml, 2)
 
 print('Scraping completed with lxml method:', result_lxml, "seconds\nTotal:", len(parsed), "cars parsed")
 
-path = osis()
+#  path = osis()
 
 combine(parsed, dictred, dict_disc_again, dict_red_nochanges)
 combine(parsed, dictold, dict_disc, dict_nochanges)
@@ -502,11 +504,7 @@ for dict_ in dicttosort:
 
 load_to_html()
 
-# print("Press ESC key to exit")
-# keyboard.wait('esc','space')
-
-exitmessage()
-
 finish = time.time()
 result = round(finish - start, 2)
-print('Completed:', result, "seconds")
+
+exitmessage(result)

@@ -61,7 +61,7 @@ sort = 'ad_posted'
 def openbase(file, text):
     dict_var = []
     try:
-        with open(file, "r") as old_file:  # encoding='utf-8'
+        with open(file, "r", encoding="utf-8") as old_file:  # encoding='utf-8'
             dict_var = json.load(old_file)
         print("{} results are available: {} cars".format(text, len(dict_var)))
         return dict_var
@@ -92,8 +92,8 @@ def scraping(base_url):  # main parse
             divs += soup.find_all('div', attrs={"class": "cf item paid-featured-item featured-motors"})
             divs += soup.find_all('div', attrs={"class": "cf item"})
             for div in divs:
-                title = div.find('a').text
-                title = title.strip()
+                title_test = div.find('a').text     # title
+                title_test = title_test.strip()
                 # issues with title:    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
                 #                       UnicodeEncodeError: 'charmap' codec can't encode characters in position 126-130: character maps to <undefined>
                 # trying do encode
@@ -134,7 +134,7 @@ def scraping(base_url):  # main parse
                 else:
                     date = str(car_data[4])
                 ad_posted = str(car_data[2]) + "-" + month + "-" + date
-                title_test = str(car_data[5]).replace("-", " ")
+                title = str(car_data[5]).replace("-", " ") # title_test
                 parsed.append({
                     'title': title,
                     'href': href,
@@ -147,7 +147,7 @@ def scraping(base_url):  # main parse
                     'title_test': title_test
                 })
         else:
-            print("error")
+            print("network error")
             continue
     finish_scraping = time.time()
     result_scraping = round(finish_scraping - start_scraping, 2)
@@ -186,13 +186,13 @@ def dump_data():
     out_disc = dict_disc + dict_disc_again + dict_red_nochanges
     out_sold = dictold + dictred + dictsold
     if dictold != out_new:
-        with open("lxml_data.json", "w+") as write_file:
+        with open("data\lxml_data.json", "w+", encoding="utf-8") as write_file:
             json.dump(out_new, write_file)
     if dictred != out_disc:
-        with open("lxml_data_disc.json", "w+") as write_disc_file:
+        with open("data\lxml_data_disc.json", "w+", encoding="utf-8") as write_disc_file:
             json.dump(out_disc, write_disc_file)
     if dictsold != out_sold:
-        with open("lxml_data_sold.json", "w+") as write_old_file:
+        with open("data\lxml_data_sold.json", "w+", encoding="utf-8") as write_old_file:
             json.dump(out_sold, write_old_file)
 
 
@@ -205,16 +205,22 @@ def sort_by_parametr(list_to_sort, parametr):
 
 def load_to_html():
     counter = 1
-    with open('output_lxml.html', 'w+') as out_file:  # (path + 'output_lxml.html', 'w+')
-        line = """  <!DOCTYPE html>
-                <html lang="en">
-                <head>
-                <meta charset="UTF-8">
-                <link rel="stylesheet" href="data/styles.css">
-                <title>Dubizzle scraper by 2rbo</title>
-                </head>
-                <body>
+    with open('templates/result.html', 'w+', encoding="utf-8") as out_file:  # (path + 'output_lxml.html', 'w+')
+        line = """{% extends 'base.html' %}
+                {% block body %}
                     """
+        '''<!DOCTYPE html>
+        <html lang="en">
+        <head>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+        <title>Dubizzle scraper by 2rbo</title>
+        </head>
+        <body>
+        <script>
+            document.write('<a href="' + document.referrer + '">Go Back</a>');
+        </script>
+        '''
         out_file.write(line)
 
         if not dict_new:
@@ -452,8 +458,8 @@ def load_to_html():
                 </table>
                 """
             out_file.write(line)
-        line = """ </body>
-                    </html>"""
+        line = "{% endblock %}"
+        #</body></html>
         out_file.write(line)
 
 
@@ -469,9 +475,9 @@ def exitmessage(tim):
 # ============================================= Execution ====================================================
 print("Program is running. \nPlease wait...")
 
-dictold = openbase("lxml_data.json", "Old")
-dictred = openbase("lxml_data_disc.json", "Old discounted")
-dictsold = openbase("lxml_data_sold.json", "Sold")
+dictold = openbase("data\lxml_data.json", "Old")
+dictred = openbase("data\lxml_data_disc.json", "Old discounted")
+dictsold = openbase("data\lxml_data_sold.json", "Sold")
 
 start_lxml = time.time()
 

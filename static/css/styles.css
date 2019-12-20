@@ -1,6 +1,7 @@
 body {
     background-color: white;
 }
+
 h2 {
     color: black;
 }
@@ -9,7 +10,7 @@ p {
     color: red;
 }
 
-table{
+table {
     border: 1px solid black;
     text-align: center;
     border-collapse: collapse;

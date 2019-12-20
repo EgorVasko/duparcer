@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 # link can be changed from dubai to uae
-#  output to database
 
 # import keyboard
 # import sys
@@ -186,13 +185,13 @@ def dump_data():
     out_disc = dict_disc + dict_disc_again + dict_red_nochanges
     out_sold = dictold + dictred + dictsold
     if dictold != out_new:
-        with open("data\lxml_data.json", "w+", encoding="utf-8") as write_file:
+        with open("data/lxml_data.json", "w+", encoding="utf-8") as write_file:
             json.dump(out_new, write_file)
     if dictred != out_disc:
-        with open("data\lxml_data_disc.json", "w+", encoding="utf-8") as write_disc_file:
+        with open("data/lxml_data_disc.json", "w+", encoding="utf-8") as write_disc_file:
             json.dump(out_disc, write_disc_file)
     if dictsold != out_sold:
-        with open("data\lxml_data_sold.json", "w+", encoding="utf-8") as write_old_file:
+        with open("data/lxml_data_sold.json", "w+", encoding="utf-8") as write_old_file:
             json.dump(out_sold, write_old_file)
 
 
@@ -230,7 +229,7 @@ def load_to_html():
             line = "<center><h2> New cars " + time_of_parse + "</center></h2>"
             out_file.write(line)
             line = """
-            <table>
+            <table class="new">
                 <tr>
                     <th>#</th>
                     <th>Posted</th>
@@ -248,10 +247,10 @@ def load_to_html():
                     <td width="5%">""" + str(counter) + """</td>
                         <td width="10%">""" + i['ad_posted'] + """</td>
                         <td class="textfield" width="20%">""" + i['brand'] + " " + i['model'] + """</td>
-                        <td width="10%">""" + i['price'] + """</td>
+                        <td width="8%">""" + i['price'] + """</td>
                         <td width="7%">""" + i['year'] + """</td>
                         <td width="10%">""" + i['mileage'] + """</td>
-                        <td class="textfield" width="38%"><a href='""" + i['href'] + """'>""" + i['title_test'] + """</a><br/></td>
+                        <td class="textfield" width="40%"><a href='""" + i['href'] + """'>""" + i['title_test'] + """</a><br/></td>
                     </tr>
 
                 """
@@ -287,11 +286,11 @@ def load_to_html():
                         <td width="4%"><center>""" + str(counter) + """</td>
                         <td width="9%">""" + i['ad_posted'] + """</td>
                         <td class="textfield" width="19%">""" + i['brand'] + " " + i['model'] + """</td>
-                        <td width="9%">""" + i['price'] + """</td>
-                        <td width="9%">""" + i['oldprice'] + """</td>
+                        <td width="8%">""" + i['price'] + """</td>
+                        <td width="8%">""" + i['oldprice'] + """</td>
                         <td width="6%">""" + i['year'] + """</td>
                         <td width="9%">""" + i['mileage'] + """</td>
-                        <td class="textfield" width="37%"><a href='""" + i['href'] + """'>""" + i['title_test'] + """</a><br/></td>
+                        <td class="textfield" width="39%"><a href='""" + i['href'] + """'>""" + i['title_test'] + """</a><br/></td>
                     </tr>
 
                 """
@@ -327,11 +326,11 @@ def load_to_html():
                         <td width="4%"><center>""" + str(counter) + """</td>
                         <td width="9%">""" + i['ad_posted'] + """</td>
                         <td class="textfield" width="19%">""" + i['brand'] + " " + i['model'] + """</td>
-                        <td width="9%">""" + i['price'] + """</td>
-                        <td width="9%">""" + i['oldprice'] + """</td>
+                        <td width="8%">""" + i['price'] + """</td>
+                        <td width="8%">""" + i['oldprice'] + """</td>
                         <td width="6%">""" + i['year'] + """</td>
                         <td width="9%">""" + i['mileage'] + """</td>
-                        <td class="textfield" width="37%"><a href='""" + i['href'] + """'>""" + i['title_test'] + """</a><br/></td>
+                        <td class="textfield" width="39%"><a href='""" + i['href'] + """'>""" + i['title_test'] + """</a><br/></td>
                     </tr>
 
                 """
@@ -366,10 +365,10 @@ def load_to_html():
                         <td width="5%">""" + str(counter) + """</td>
                         <td width="10%">""" + i['ad_posted'] + """</td>
                         <td class="textfield" width="20%">""" + i['brand'] + " " + i['model'] + """</td>
-                        <td width="10%">""" + i['price'] + """</td>
+                        <td width="8%">""" + i['price'] + """</td>
                         <td width="7%">""" + i['year'] + """</td>
                         <td width="10%">""" + i['mileage'] + """</td>
-                        <td class="textfield" width="38%"><a href='""" + i['href'] + """'>""" + i['title_test'] + """</a><br/></td>
+                        <td class="textfield" width="40%"><a href='""" + i['href'] + """'>""" + i['title_test'] + """</a><br/></td>
                     </tr>
                 """
                 out_file.write(line)
@@ -399,8 +398,8 @@ def load_to_html():
             out_file.write(line)
             for i in dict_red_nochanges:
                 #  =================  output in a format => because of no old price only
-                line = """<tr><td width="4%"><center> {} </td><td width="9%"> {} </td><td class="textfield" width="19%"> {} {} </td><td width="9%"> {}</td>
-                <td width="9%"> {} </td><td width="6%"> {} </td><td width="9%"> {} </td><td class="textfield" width="37%"><a href='{}'>{}</a><br/></td>
+                line = """<tr><td width="4%"><center> {} </td><td width="11%"> {} </td><td class="textfield" width="19%"> {} {} </td><td width="7%"> {}</td>
+                <td width="7%"> {} </td><td width="6%"> {} </td><td width="9%"> {} </td><td class="textfield" width="39%"><a href='{}'>{}</a><br/></td>
                 </tr>""".format(str(counter), i['ad_posted'], i['brand'], i['model'], i['price'], i['oldprice'], i['year'], i['mileage'], i['href'], i['title_test'])
                 '''line = """
                     <tr>
@@ -443,13 +442,13 @@ def load_to_html():
             for i in out_sold:
                 line = """
                     <tr>
-                        <td width="5%">""" + str(counter) + """</td>
-                        <td width="10%">""" + i['ad_posted'] + """</td>
-                        <td class="textfield" width="20%">""" + i['brand'] + " " + i['model'] + """</td>
-                        <td width="10%">""" + i['price'] + """</td>
+                        <td width="3%">""" + str(counter) + """</td>
+                        <td width="11%">""" + i['ad_posted'] + """</td>
+                        <td class="textfield" width="21%">""" + i['brand'] + " " + i['model'] + """</td>
+                        <td width="7%">""" + i['price'] + """</td>
                         <td width="7%">""" + i['year'] + """</td>
                         <td width="10%">""" + i['mileage'] + """</td>
-                        <td class="textfield" width="38%"><a href='""" + i['href'] + """'>""" + i['title_test'] + """</a><br/></td>
+                        <td class="textfield" width="41%"><a href='""" + i['href'] + """'>""" + i['title_test'] + """</a><br/></td>
                     </tr>
                         """
                 out_file.write(line)
@@ -475,9 +474,9 @@ def exitmessage(tim):
 # ============================================= Execution ====================================================
 print("Program is running. \nPlease wait...")
 
-dictold = openbase("data\lxml_data.json", "Old")
-dictred = openbase("data\lxml_data_disc.json", "Old discounted")
-dictsold = openbase("data\lxml_data_sold.json", "Sold")
+dictold = openbase("data/lxml_data.json", "Old")
+dictred = openbase("data/lxml_data_disc.json", "Old discounted")
+dictsold = openbase("data/lxml_data_sold.json", "Sold")
 
 start_lxml = time.time()
 

@@ -10,11 +10,11 @@ import psycopg2
 
 parsed = []
 
-user = "pythonuser"
-password = "pythonuser"
-host = "127.0.0.1"
+user = "vwaofeibgoyimj"
+password = "ddd4e1f49894d45a7ffd083aece209f3c732810a3892f7ed7848339ccfbbbf46"
+host = "ec2-107-21-97-5.compute-1.amazonaws.com"
 port = "5432"
-database = "duparcer"
+database = "dbqobjevasgjvl"
 
 
 def openbase(file, text):
@@ -177,8 +177,8 @@ def read_from_database(tablename, dictname):
 
 
 #  ================== execution ==================
-'''
-dictold = openbase("lxml_data.json", "Old")
+
+dictold = openbase("data/lxml_data.json", "Old")
 create_table("soldcars")
 write_to_database(dictold, "soldcars")
 read_from_database("soldcars", parsed)
@@ -188,4 +188,3 @@ result = 0
 for i in parsed:
     result += i['year']
 print(result)
-'''

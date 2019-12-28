@@ -7,15 +7,17 @@
 import json
 import psycopg2
 
-
 parsed = []
 
-user = "vwaofeibgoyimj"
-password = "ddd4e1f49894d45a7ffd083aece209f3c732810a3892f7ed7848339ccfbbbf46"
-host = "ec2-107-21-97-5.compute-1.amazonaws.com"
+user = "udiovrzasgdmfb"
+#user = "pythonuser"
+password = "07ae622ed6fbb9db7c637fae65609a3a42f179d3751c4ad1f2f215aca0d717c9"
+#password = "pythonuser"
+host = "ec2-174-129-33-14.compute-1.amazonaws.com"
+#host = "127.0.0.1"
 port = "5432"
-database = "dbqobjevasgjvl"
-
+database = "d59nu1h4fi30n4"
+#database = "duparcer"
 
 def openbase(file, text):
     dict_var = []
@@ -47,17 +49,17 @@ def create_table(tablename):
                 OLDPRICE VARCHAR(6),
                 YEAR INT,
                 MILEAGE INT,
-                LINK VARCHAR(200),
+                LINK VARCHAR(300),
                 TITLE TEXT,
                 TITLETEST TEXT);'''
 
         cursor.execute(create_table_query)
 
         connection.commit()
-        print("Table created successfully in PostgreSQL ")
+        print("Table: " + tablename + " created successfully in PostgreSQL ")
 
     except (Exception, psycopg2.DatabaseError) as error :
-        print ("Error while creating PostgreSQL table", error)
+        print ("Error while creating PostgreSQL table:", error)
     finally:
         #closing database connection.
             if(connection):
@@ -81,7 +83,7 @@ def truncate_table(tablename):
         cursor.execute(truncate_table_query)
 
         connection.commit()
-        print("Table successfully clearedin PostgreSQL ")
+        print("Table " + tablename + " - successfully cleared in PostgreSQL ")
 
     except (Exception, psycopg2.DatabaseError) as error :
         print ("Error while clearing PostgreSQL table", error)
@@ -106,16 +108,19 @@ def write_to_database(dictname, tablename):
         m = 1
         for i in dictname:
             command = "INSERT INTO " + tablename + " (ID,POSTED,MODEL,PRICE,OLDPRICE,YEAR,MILEAGE,LINK,TITLE,TITLETEST) VALUES ("
-            to_insert = command + str(m) + ", '" + i['ad_posted'] + "', '" + i['brand'] + "-" + i['model'] + "', " + i['price'] + ", '" + str(i['oldprice']) + "', " + i['year'] + ", " + i['mileage'] + ", '" + i['href'] + "', '" + i['title'] + "', '" + i['title_test'] + "');"
+            if 'oldprice' in i and i['oldprice'] != None:
+                to_insert = command + str(m) + ", '" + str(i['ad_posted']) + "', '" + i['brand'] + "-" + i['model'] + "', " + i['price'] + ", '" + str(i['oldprice']) + "', " + i['year'] + ", " + i['mileage'] + ", '" + i['href'] + "', '" + i['title'] + "', '" + i['title_test'] + "');"
+            else:
+                to_insert = command + str(m) + ", '" + str(i['ad_posted']) + "', '" + i['brand'] + "-" + i['model'] + "', " + i['price'] + ", '" + "null" + "', " + i['year'] + ", " + i['mileage'] + ", '" + i['href'] + "', '" + i['title'] + "', '" + i['title_test'] + "');"
             #print(to_insert)
             cursor.execute(to_insert)
             m += 1
 
         connection.commit()
-        print("Data added ")
+        print("Data added to table: " + tablename + ". " + str(len(dictname)) + " items")
 
     except (Exception, psycopg2.DatabaseError) as error :
-        print ("Error while addind data PostgreSQL table", error)
+        print ("Error while addind data PostgreSQL table:", error)
     finally:
         #closing database connection.
             if(connection):
@@ -164,10 +169,10 @@ def read_from_database(tablename, dictname):
             print("TITLE =", row[8])
             print("TITLETEST = ", row[9], "\n")
             '''
-        print("Data read ")
+        print("Data read: " + str(len(dictname)) + " rows")
 
     except (Exception, psycopg2.DatabaseError) as error :
-        print ("Error while reading data PostgreSQL table", error)
+        print ("Error while reading data PostgreSQL table: ", error)
     finally:
         #closing database connection.
             if(connection):
@@ -178,13 +183,20 @@ def read_from_database(tablename, dictname):
 
 #  ================== execution ==================
 
-dictold = openbase("data/lxml_data.json", "Old")
-create_table("soldcars")
-write_to_database(dictold, "soldcars")
-read_from_database("soldcars", parsed)
 
-print(parsed)
-result = 0
-for i in parsed:
-    result += i['year']
-print(result)
+
+# create_table("soldcars")
+# write_to_database(dictold, "soldcars")
+#read_from_database("soldcars", parsed)
+# dictsold = openbase("data/lxml_data_sold.json", "sold")
+# dictdisc = openbase("data/lxml_data_disc.json", "disc")
+# dictnew = openbase("data/lxml_data.json", "new")
+#create_table("soldcars")
+#create_table("discounted")
+#create_table("newcars")
+# truncate_table("soldcars")
+# truncate_table("discounted")
+# truncate_table("newcars")
+# write_to_database(dictsold, "soldcars")
+# write_to_database(dictdisc, "discounted")
+# write_to_database(dictnew, "newcars")

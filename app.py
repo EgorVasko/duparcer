@@ -1,8 +1,7 @@
-from flask import Flask, render_template
-import socket
+from flask import Flask, render_template, redirect
+import socket, subprocess
 
 application = Flask(__name__)
-
 
 def get_ip_address():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -15,19 +14,25 @@ hostname = get_ip_address()  # socket.gethostname()
 
 @application.route("/")
 def main():
-    return "<h2><a href = 'run'>Run program</a></h2><br>" \
-           "<h2><a href = 'result'>Result</a></h2><br>"
+    return redirect("/result", code=302)
 
 
 @application.route("/run")
 def run():
     import lxmlparcer
-    return "<a href = 'result'>Result</a>"
+    #subprocess.call("lxmlparcer.py", shell = True)
+    return redirect("/result", code=302)
 
 
 @application.route('/result')
 def result():
     return render_template('result.html')
+
+
+@application.route('/result-var')
+def result_var():
+    from lxmlparcer import output_in_var
+    return render_template('result.html', output_in_var=output_in_var)
 
 
 if __name__ == "__main__":

@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-
 # link can be changed from dubai to uae
 
 # import keyboard
@@ -96,7 +95,7 @@ def scraping(base_url):  # main parse
             divs += soup.find_all('div', attrs={"class": "cf item paid-featured-item featured-motors"})
             divs += soup.find_all('div', attrs={"class": "cf item"})
             for div in divs:
-                title_test = div.find('a').text     # title
+                title_test = div.find('a').text  # title
                 title_test = title_test.strip()
                 # issues with title:    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
                 #                       UnicodeEncodeError: 'charmap' codec can't encode characters in position 126-130: character maps to <undefined>
@@ -138,7 +137,7 @@ def scraping(base_url):  # main parse
                 else:
                     date = str(car_data[4])
                 ad_posted = str(car_data[2]) + "-" + month + "-" + date
-                title = str(car_data[5]).replace("-", " ") # title_test
+                title = str(car_data[5]).replace("-", " ")  # title_test
                 parsed.append({
                     'title': title,
                     'href': href,
@@ -171,13 +170,13 @@ def combine(main, dict0, dict1, dict2):
     for i in range(len(main), 0, -1):
         for z in range(len(dict0), 0, -1):
             if main[i - 1].get('href') == dict0[z - 1].get('href'):
-                if int(main[i - 1].get('price')) < int(dict0[z - 1].get('price')):    # int()
+                if int(main[i - 1].get('price')) < int(dict0[z - 1].get('price')):  # int()
                     main[i - 1]['oldprice'] = dict0[z - 1].get('price')  # adding old price
                     dict1.append(main[i - 1])
                     main.pop(i - 1)
                     dict0.pop(z - 1)
                     break
-                if int(main[i - 1].get('price')) >= int(dict0[z - 1].get('price')): #int()
+                if int(main[i - 1].get('price')) >= int(dict0[z - 1].get('price')):  # int()
                     main[i - 1]['oldprice'] = dict0[z - 1].get('oldprice')
                     dict2.append(main[i - 1])
                     main.pop(i - 1)
@@ -402,7 +401,8 @@ def load_to_html():
                 #  =================  output in a format => because of no old price only
                 line = """<tr><td width="4%"><center> {} </td><td width="11%"> {} </td><td class="textfield" width="19%"> {} {} </td><td width="7%"> {}</td>
                 <td width="7%"> {} </td><td width="6%"> {} </td><td width="9%"> {} </td><td class="textfield" width="39%"><a href='{}'>{}</a><br/></td>
-                </tr>""".format(str(counter), i['ad_posted'], i['brand'], i['model'], i['price'], i['oldprice'], i['year'], i['mileage'], i['href'], i['title_test'])
+                </tr>""".format(str(counter), i['ad_posted'], i['brand'], i['model'], i['price'], i['oldprice'],
+                                i['year'], i['mileage'], i['href'], i['title_test'])
                 '''line = """
                     <tr>
                         <td width="4%"><center>""" + str(counter) + """</td>
@@ -460,15 +460,15 @@ def load_to_html():
                 """
             out_file.write(line)
         line = "{% endblock %}"
-        #</body></html>
+        # </body></html>
         out_file.write(line)
 
 
 def load_to_variable():
     counter = 1
-    line = """{% extends 'base.html' %}
-            {% block body %}
-                """
+    # line = """{% extends 'base.html' %}
+    #       {% block body %}
+    #          """
     '''<!DOCTYPE html>
     <html lang="en">
     <head>
@@ -483,9 +483,9 @@ def load_to_variable():
     '''
 
     if not dict_new:
-        line += "<center><h2> No new cars " + time_of_parse + "</center></h2>"
+        line = "<center><h2> No new cars " + time_of_parse + "</center></h2>"
     if dict_new:
-        line += "<center><h2> New cars " + time_of_parse + "</center></h2>"
+        line = "<center><h2> New cars " + time_of_parse + "</center></h2>"
         line += """
         <table class="new">
             <tr>
@@ -589,7 +589,6 @@ def load_to_variable():
         line += """
                   </table>
                     """
-    return line
 
     if not dict_nochanges:
         pass  # line = ""
@@ -623,7 +622,6 @@ def load_to_variable():
         line += """
               </table>
                 """
-
     if not dict_red_nochanges:
         pass  # line = ""
     else:
@@ -645,7 +643,8 @@ def load_to_variable():
             #  =================  output in a format => because of no old price only
             line += """<tr><td width="4%"><center> {} </td><td width="11%"> {} </td><td class="textfield" width="19%"> {} {} </td><td width="7%"> {}</td>
             <td width="7%"> {} </td><td width="6%"> {} </td><td width="9%"> {} </td><td class="textfield" width="39%"><a href='{}'>{}</a><br/></td>
-            </tr>""".format(str(counter), i['ad_posted'], i['brand'], i['model'], i['price'], i['oldprice'], i['year'], i['mileage'], i['href'], i['title_test'])
+            </tr>""".format(str(counter), i['ad_posted'], i['brand'], i['model'], i['price'], i['oldprice'], i['year'],
+                            i['mileage'], i['href'], i['title_test'])
             '''line = """
                 <tr>
                     <td width="4%"><center>""" + str(counter) + """</td>
@@ -697,8 +696,9 @@ def load_to_variable():
             </table>
             """
 
-    line += "{% endblock %}"
-    #</body></html>
+    # line += "{% endblock %}"
+    # </body></html>
+    return line
 
 
 def exitmessage(tim):
@@ -714,9 +714,9 @@ def exitmessage(tim):
 print("Program is running. \nPlease wait...")
 
 # =================== file system / open base =====================
-#dictold = openbase("data/lxml_data.json", "Old")
-#dictred = openbase("data/lxml_data_disc.json", "Old discounted")
-#dictsold = openbase("data/lxml_data_sold.json", "Sold")
+# dictold = openbase("data/lxml_data.json", "Old")
+# dictred = openbase("data/lxml_data_disc.json", "Old discounted")
+# dictsold = openbase("data/lxml_data_sold.json", "Sold")
 
 # =================== database / open base ===================
 database.read_from_database("newcars", dictold)
@@ -754,11 +754,12 @@ out_sold = dictold + dictred + dictsold
 for dict_ in dicttosort:
     sort_by_parametr(dict_, sort)
 
-load_to_html()
+# load_to_html()
 
-output_in_var = load_to_variable()
+output_in_var = load_to_variable()  # .encode('utf-8')
 
-#dump_data()
+
+# dump_data()
 
 # ==================== database
 
@@ -767,6 +768,7 @@ def dump_to_base(olddict, newdict, nameofbase):
     if olddict != newdict:
         database.truncate_table(nameofbase)
         database.write_to_database(newdict, nameofbase)
+
 
 dump_to_base(dictold, out_new, "newcars")
 dump_to_base(dictred, out_disc, "discounted")

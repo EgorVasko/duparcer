@@ -19,9 +19,9 @@ def main():
 
 @application.route("/run")
 def run():
-    import lxmlparcer
-    #subprocess.call("lxmlparcer.py", shell = True)
-    return redirect("/result", code=302)
+    #import lxmlparcer
+    subprocess.call("lxmlparcer.py", shell = True)
+    return redirect("/result-var", code=302)
 
 
 @application.route('/result')
@@ -32,7 +32,9 @@ def result():
 @application.route('/result-var')
 def result_var():
     from lxmlparcer import output_in_var
-    return render_template('result.html', output_in_var=output_in_var)
+    please = output_in_var
+    print(please[:100], type(please))
+    return render_template('result.html', please=please) # output_in_var #
 
 
 if __name__ == "__main__":

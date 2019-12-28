@@ -19,6 +19,7 @@ port = "5432"
 database = "d59nu1h4fi30n4"
 #database = "duparcer"
 
+
 def openbase(file, text):
     dict_var = []
     try:

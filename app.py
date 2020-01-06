@@ -7,7 +7,7 @@ import socket, subprocess
 import lxmlparcer
 #from flask import Markup
 
-application = Flask(__name__)
+app = Flask(__name__)
 
 
 def get_ip_address():
@@ -19,12 +19,12 @@ def get_ip_address():
 hostname = get_ip_address()  # socket.gethostname()
 
 
-@application.route("/")
+@app.route("/")
 def main():
     return render_template('base.html')
 
 
-@application.route("/run")
+@app.route("/run")
 def run():
     #import lxmlparcer
     #subprocess.call("lxmlparcer.py", shell = True)
@@ -34,6 +34,6 @@ def run():
 
 
 if __name__ == "__main__":
-    application.env = "Working"
-    application.debug = True
-    application.run(host=hostname, port=5000)
+    app.env = "Working"
+    app.debug = True
+    app.run(host=hostname, port=5000)

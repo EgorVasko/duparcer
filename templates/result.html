@@ -1,15 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="WINDOWS-1251">
+    <meta charset="utf-8">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     <title>Dubizzle scraper by 2rbo</title>
 </head>
 <body>
     <a href="/">Home</a>
     <a href="/run">Run</a>
-    <a href="/result-var">Result var</a>
-
-    {{please}}
+    {{please|safe}}
 </body>
 </html>

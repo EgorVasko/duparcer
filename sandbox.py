@@ -1,14 +1,12 @@
 #!/usr/bin/env python3
 
-#import lxmlparcer
+x = 10
+y = 15
 
-#print(lxmlparcer.output_in_var)
 
-stroka = "хуй<>poimi"
-#stroka = stroka.encode('utf-8')
+def func(a,b):
+    return a + b
+    print("ready")
 
-print(stroka, chr(128013))
 
-#stroka = stroka.decode('utf-8')
-
-print(stroka)
+func(x,y)

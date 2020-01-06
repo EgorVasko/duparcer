@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 # https://stackabuse.com/working-with-postgresql-in-python/
 
-# import database
-# database.create_table("sdfd")
 
 import json
 import psycopg2
@@ -110,9 +108,9 @@ def write_to_database(dictname, tablename):
         for i in dictname:
             command = "INSERT INTO " + tablename + " (ID,POSTED,MODEL,PRICE,OLDPRICE,YEAR,MILEAGE,LINK,TITLE,TITLETEST) VALUES ("
             if 'oldprice' in i and i['oldprice'] != None:
-                to_insert = command + str(m) + ", '" + str(i['ad_posted']) + "', '" + i['brand'] + "-" + i['model'] + "', " + i['price'] + ", '" + str(i['oldprice']) + "', " + i['year'] + ", " + i['mileage'] + ", '" + i['href'] + "', '" + i['title'] + "', '" + i['title_test'] + "');"
+                to_insert = command + str(m) + ", '" + str(i['ad_posted']) + "', '" + i['brand'] + "-" + i['model'] + "', " + str(i['price']) + ", '" + str(i['oldprice']) + "', " + str(i['year']) + ", " + str(i['mileage']) + ", '" + i['href'] + "', '" + i['title'] + "', '" + i['title_test'] + "');"
             else:
-                to_insert = command + str(m) + ", '" + str(i['ad_posted']) + "', '" + i['brand'] + "-" + i['model'] + "', " + i['price'] + ", '" + "null" + "', " + i['year'] + ", " + i['mileage'] + ", '" + i['href'] + "', '" + i['title'] + "', '" + i['title_test'] + "');"
+                to_insert = command + str(m) + ", '" + str(i['ad_posted']) + "', '" + i['brand'] + "-" + i['model'] + "', " + str(i['price']) + ", '" + "null" + "', " + str(i['year']) + ", " + str(i['mileage']) + ", '" + i['href'] + "', '" + i['title'] + "', '" + i['title_test'] + "');"
             #print(to_insert)
             cursor.execute(to_insert)
             m += 1
@@ -121,7 +119,7 @@ def write_to_database(dictname, tablename):
         print("Data added to table: " + tablename + ". " + str(len(dictname)) + " items")
 
     except (Exception, psycopg2.DatabaseError) as error :
-        print ("Error while addind data PostgreSQL table:", error)
+        print ("Error while addind data PostgreSQL table:", dictname, tablename, error)
     finally:
         #closing database connection.
             if(connection):
@@ -182,19 +180,23 @@ def read_from_database(tablename, dictname):
                 print("PostgreSQL connection is closed")
 
 
-#  ================== execution ==================
+def dump_to_base(olddict, newdict, nameofbase):
+    if olddict != newdict:
+        truncate_table(nameofbase)
+        write_to_database(newdict, nameofbase)
 
+#  ================== execution ==================
 
 
 # create_table("soldcars")
 # write_to_database(dictold, "soldcars")
-#read_from_database("soldcars", parsed)
+# read_from_database("soldcars", parsed)
 # dictsold = openbase("data/lxml_data_sold.json", "sold")
 # dictdisc = openbase("data/lxml_data_disc.json", "disc")
 # dictnew = openbase("data/lxml_data.json", "new")
-#create_table("soldcars")
-#create_table("discounted")
-#create_table("newcars")
+# create_table("soldcars")
+# create_table("discounted")
+# create_table("newcars")
 # truncate_table("soldcars")
 # truncate_table("discounted")
 # truncate_table("newcars")

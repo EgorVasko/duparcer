@@ -1,7 +1,14 @@
+#git push heroku +HEAD:master
+# https://blog.pythonanywhere.com/169/
+# flask render_template insert html
+
 from flask import Flask, render_template, redirect
 import socket, subprocess
+import lxmlparcer
+#from flask import Markup
 
 application = Flask(__name__)
+
 
 def get_ip_address():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -14,27 +21,16 @@ hostname = get_ip_address()  # socket.gethostname()
 
 @application.route("/")
 def main():
-    return redirect("/result", code=302)
+    return render_template('base.html')
 
 
 @application.route("/run")
 def run():
     #import lxmlparcer
-    subprocess.call("lxmlparcer.py", shell = True)
-    return redirect("/result-var", code=302)
-
-
-@application.route('/result')
-def result():
-    return render_template('result.html')
-
-
-@application.route('/result-var')
-def result_var():
-    from lxmlparcer import output_in_var
-    please = output_in_var
-    print(please[:100], type(please))
-    return render_template('result.html', please=please) # output_in_var #
+    #subprocess.call("lxmlparcer.py", shell = True)
+    #please = output_in_var # Markup(output_in_var)
+    scalpingresult = lxmlparcer.all()
+    return render_template('result.html', please=scalpingresult) #output_in_var #
 
 
 if __name__ == "__main__":
